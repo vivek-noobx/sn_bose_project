@@ -91,7 +91,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Check if verified
-    if (!user.is_verified) {
+    if (!user.is_verified) {  
       const otp = generateOtp();
       const otpExpiresAt = getOtpExpiry();
       
@@ -149,7 +149,7 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    if (user.otp !== otp) {
+    if (user.otp !== otp) { 
       res.status(401).json({ error: 'Invalid OTP.' });
       return;
     }

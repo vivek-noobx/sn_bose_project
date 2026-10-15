@@ -76,7 +76,7 @@ export const evaluateAssessment = async (
 
   // 2. Call Gemini to evaluate the rest and package everything
   const llm = new ChatGoogleGenerativeAI({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.7-flash',
     temperature: 0.2, // Low temperature for consistent grading
     maxRetries: 2,
     apiKey: process.env.GEMINI_API_KEY,

@@ -42,7 +42,7 @@ export const evaluateCodeWithAI = async (
   testCases: Array<{ input: string, expectedOutput: string }>
 ): Promise<EvaluationResult> => {
   const llm = new ChatGoogleGenerativeAI({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.7-flash',
     temperature: 0.1, // Low temperature for deterministic evaluation
     maxRetries: 2,
     apiKey: process.env.GEMINI_API_KEY,

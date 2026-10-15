@@ -19,7 +19,8 @@ export const initChromaCollection = async () => {
   try {
     const collection = await client.getOrCreateCollection({
       name: COLLECTION_NAME,
-      metadata: { "hnsw:space": "cosine" }
+      metadata: { "hnsw:space": "cosine" },
+      embeddingFunction: { generate: async () => [] }
     });
     return collection;
   } catch (error) {

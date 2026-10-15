@@ -31,7 +31,7 @@ export type ParsedResume = z.infer<typeof resumeSchema>;
 export const parseResumeFromBuffer = async (buffer: Buffer): Promise<{ parsedData: ParsedResume; rawText: string }> => {
   // 1. Extract text from PDF buffer
   const pdfData = await pdfParse(buffer);
-  const rawText = pdfData.text;
+  const rawText = pdfData.text; 
 
   if (!rawText || rawText.trim() === '') {
     throw new Error("Could not extract text from the PDF.");
@@ -39,7 +39,7 @@ export const parseResumeFromBuffer = async (buffer: Buffer): Promise<{ parsedDat
 
   // 2. Setup LangChain LLM (Google Gemini)
   const llm = new ChatGoogleGenerativeAI({
-    model: "gemini-2.5-flash",
+    model: "gemini-3.7-flash",
     temperature: 0,
     maxRetries: 2,
     apiKey: process.env.GEMINI_API_KEY,

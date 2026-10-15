@@ -75,7 +75,7 @@ export const generateAdaptiveTest = async (
   jobDescription: string
 ): Promise<GeneratedTest> => {
   const llm = new ChatGoogleGenerativeAI({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.7-flash',
     temperature: 0.7,
     maxRetries: 2,
     apiKey: process.env.GEMINI_API_KEY,

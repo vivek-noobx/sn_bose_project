@@ -22,10 +22,16 @@ const upload = multer({
 
 // Wrap multer in a custom handler to ensure errors always return JSON
 const uploadMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  upload.single('resume')(req, res, (err) => {
+ 
+  upload.single('resume')
+  (req, res,      (err) => {
+   
+   
     if (err instanceof multer.MulterError) {
       return res.status(400).json({ error: `Upload error: ${err.message}` });
-    } else if (err) {
+    } 
+    
+    else if (err) {
       return res.status(400).json({ error: err.message });
     }
     next();
