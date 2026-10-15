@@ -1,3 +1,4 @@
+
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -10,12 +11,17 @@ import { initDb } from './services/db';
 dotenv.config();
 
 const app = express();
-const port = 5001;
+const port =  Number(process.env.PORT) || 5001;
 
-app.use(cors());
+// Set FRONTEND_URL in Render to your deployed Vercel URL.
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || '*',
+  })
+);
+
 app.use(express.json());
 
-// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api', uploadRoutes);
 app.use('/api/jobs', jobRoutes);
@@ -25,11 +31,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'AI Resume Server is running' });
 });
 
-// Initialize SQLite database, then start listening
 const startServer = async () => {
   try {
     await initDb();
-    app.listen(port, () => {
+
+    app.listen(port, '0.0.0.0', () => {
       console.log(`Server is running on port ${port}`);
     });
   } catch (err) {
@@ -39,3 +45,4 @@ const startServer = async () => {
 };
 
 startServer();
+
