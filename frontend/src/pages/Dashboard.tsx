@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useResume } from '../context/ResumeContext';
 import { 
   Users, FileText, CheckCircle2, AlertCircle, Loader2, Award, 
-  TrendingUp, Calendar, ChevronRight, X, Code, BookOpen, Briefcase, Plus, Trash2
+  TrendingUp, Calendar, ChevronRight, X, Briefcase, Plus, Trash2
 } from 'lucide-react';
 
 interface ResumeData {
@@ -58,7 +58,7 @@ const Dashboard: React.FC = () => {
   const [myJobs, setMyJobs] = useState<any[]>([]);
   
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
   
   // Modal states for report viewing
   const [selectedAssessment, setSelectedAssessment] = useState<AssessmentRecord | null>(null);

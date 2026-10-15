@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import {
   Loader2, AlertCircle, Sparkles, ChevronRight,
   ChevronLeft, CheckCircle2, Code, MessageSquare, ListChecks,
-  Clock, Trophy, RotateCcw, ClipboardList, Maximize2, Minimize2, Play, Send
+  Clock, Trophy, RotateCcw, Maximize2, Minimize2, Play, Send
 } from 'lucide-react';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
