@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useResume } from '../context/ResumeContext';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../config/api';
 import { Loader2, Database, AlertCircle, Percent, ArrowLeft, ClipboardList } from 'lucide-react';
 
 interface MatchResult {
@@ -38,7 +39,7 @@ const JobMatches: React.FC = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetch('http://localhost:5001/api/jobs/match', {
+      const res = await fetch(`${API_BASE_URL}/api/jobs/match`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -62,7 +63,7 @@ const JobMatches: React.FC = () => {
     setIsSeeding(true);
     setError(null);
     try {
-      const res = await fetch('http://localhost:5001/api/jobs/seed', { 
+      const res = await fetch(`${API_BASE_URL}/api/jobs/seed`, { 
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../config/api';
 import { Loader2, AlertCircle, ArrowLeft, Users, Calendar, CheckCircle2 } from 'lucide-react';
 import { EvaluationReportModal } from './Dashboard';
 import type { AssessmentRecord } from './Dashboard';
@@ -25,7 +26,7 @@ const JobCandidates: React.FC = () => {
     const fetchCandidates = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch(`http://localhost:5001/api/jobs/${jobId}/candidates`, {
+        const res = await fetch(`${API_BASE_URL}/api/jobs/${jobId}/candidates`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();

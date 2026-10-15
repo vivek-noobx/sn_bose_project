@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useResume } from '../context/ResumeContext';
+import { API_BASE_URL } from '../config/api';
 import { 
   Users, FileText, CheckCircle2, AlertCircle, Loader2, Award, 
   TrendingUp, Calendar, ChevronRight, X, Briefcase, Plus, Trash2
@@ -77,7 +78,7 @@ const Dashboard: React.FC = () => {
     setError(null);
     try {
       // 1. Fetch assessment history
-      const historyRes = await fetch('http://localhost:5001/api/assessment/history', {
+      const historyRes = await fetch(`${API_BASE_URL}/api/assessment/history`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (historyRes.ok) {
@@ -87,7 +88,7 @@ const Dashboard: React.FC = () => {
 
       if (isRecruiter) {
         // 2. Fetch candidates list for recruiter
-        const candRes = await fetch('http://localhost:5001/api/auth/candidates', {
+        const candRes = await fetch(`${API_BASE_URL}/api/auth/candidates`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (candRes.ok) {
@@ -96,7 +97,7 @@ const Dashboard: React.FC = () => {
         }
         
         // 3. Fetch recruiter's posted jobs
-        const jobsRes = await fetch('http://localhost:5001/api/jobs/recruiter', {
+        const jobsRes = await fetch(`${API_BASE_URL}/api/jobs/recruiter`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (jobsRes.ok) {
@@ -105,7 +106,7 @@ const Dashboard: React.FC = () => {
         }
       } else {
         // 2. Fetch candidate's resume profile
-        const resumeRes = await fetch('http://localhost:5001/api/resume', {
+        const resumeRes = await fetch(`${API_BASE_URL}/api/resume`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (resumeRes.ok) {
@@ -128,7 +129,7 @@ const Dashboard: React.FC = () => {
     }
     
     try {
-      const res = await fetch(`http://localhost:5001/api/jobs/${jobId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/jobs/${jobId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });

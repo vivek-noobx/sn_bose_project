@@ -3,6 +3,7 @@ import { UploadCloud, File as FileIcon, X, CheckCircle2, AlertCircle, Loader2, B
 import { useNavigate } from 'react-router-dom';
 import { useResume, type ParsedResume } from '../context/ResumeContext';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../config/api';
 
 const ResumeUpload: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
@@ -71,7 +72,7 @@ const ResumeUpload: React.FC = () => {
     formData.append('resume', file);
 
     try {
-      const response = await fetch('http://localhost:5001/api/upload-resume', {
+      const response = await fetch(`${API_BASE_URL}/api/upload-resume`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

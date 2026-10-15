@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useResume } from '../context/ResumeContext';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../config/api';
 import {
   Loader2, AlertCircle, Sparkles, ChevronRight,
   ChevronLeft, CheckCircle2, Code, MessageSquare, ListChecks,
@@ -199,7 +200,7 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ test, jobId, jobRole, job
     setSubmitError(null);
 
     try {
-      const res = await fetch('http://localhost:5001/api/assessment/submit', {
+      const res = await fetch(`${API_BASE_URL}/api/assessment/submit`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -479,7 +480,7 @@ const EnhancedCodingCard: React.FC<{ q: Question; answer?: string; setAnswer: (i
     setEvalError(null);
     try {
       const testCasesToRun = submitAll ? q.testCases : publicTestCases;
-      const res = await fetch('http://localhost:5001/api/evaluate-code', {
+      const res = await fetch(`${API_BASE_URL}/api/evaluate-code`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -658,7 +659,7 @@ const Assessment: React.FC = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetch('http://localhost:5001/api/generate-test', {
+      const res = await fetch(`${API_BASE_URL}/api/generate-test`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

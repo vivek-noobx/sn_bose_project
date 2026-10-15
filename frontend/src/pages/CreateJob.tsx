@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../config/api';
 import { Briefcase, Building2, AlignLeft, Tags, Loader2, ArrowLeft } from 'lucide-react';
 
 const CreateJob: React.FC = () => {
@@ -31,7 +32,7 @@ const CreateJob: React.FC = () => {
     setError(null);
 
     try {
-      const res = await fetch('http://localhost:5001/api/jobs', {
+      const res = await fetch(`${API_BASE_URL}/api/jobs`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
