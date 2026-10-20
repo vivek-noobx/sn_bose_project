@@ -1,53 +1,38 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
+import dotenv from 'dotenv';
 
-let transporter: nodemailer.Transporter | null = null;
+dotenv.config();
 
-// Initialize the Nodemailer transporter
-const initTransporter = async () => {
-  if (transporter) return transporter;
+let resend: Resend | null = null;
 
-  // Use real SMTP if configured
-  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-    transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
-    console.log('Real SMTP Email transporter initialized.');
-    return transporter;
+const getResendClient = (): Resend => {
+  if (resend) return resend;
+
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY is missing from environment variables.');
   }
 
-  // Fallback to Ethereal for testing
-  try {
-    console.warn('⚠️ Real SMTP credentials not found in .env. Falling back to Ethereal mock email.');
-    const testAccount = await nodemailer.createTestAccount();
-    transporter = nodemailer.createTransport({
-      host: testAccount.smtp.host,
-      port: testAccount.smtp.port,
-      secure: testAccount.smtp.secure,
-      auth: {
-        user: testAccount.user,
-        pass: testAccount.pass,
-      },
-    });
-    console.log('Ethereal Email transporter initialized.');
-    return transporter;
-  } catch (error) {
-    console.error('Failed to create Ethereal test account', error);
-    throw error;
-  }
+  resend = new Resend(apiKey);
+
+  console.log('Resend email service initialized.');
+
+  return resend;
 };
 
-export const sendOtpEmail = async (to: string, otp: string): Promise<void> => {
-  const mailTransporter = await initTransporter();
+export const sendOtpEmail = async (
+  to: string,
+  otp: string
+): Promise<void> => {
+  const client = getResendClient();
 
-  const info = await mailTransporter.sendMail({
-    from: `"TalentAI Auth" <${process.env.SMTP_USER || 'no-reply@talentai.example.com'}>`,
-    to,
+  const fromEmail =
+    process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
+
+  const { data, error } = await client.emails.send({
+    from: `TalentAI Auth <${fromEmail}>`,
+    to: [to],
     subject: 'Your Verification OTP Code',
     text: `Your OTP code is ${otp}. It is valid for 10 minutes.`,
     html: `
@@ -60,6 +45,11 @@ export const sendOtpEmail = async (to: string, otp: string): Promise<void> => {
     `,
   });
 
-  console.log(`✅ OTP sent to ${to}`);
-  console.log(`🔗 Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+  if (error) {
+    console.error('Resend email error:', error);
+    throw new Error(`Failed to send OTP email: ${error.message}`);
+  }
+
+  console.log(`OTP email accepted by Resend for ${to}.`);
+  console.log('Resend email ID:', data?.id);
 };
