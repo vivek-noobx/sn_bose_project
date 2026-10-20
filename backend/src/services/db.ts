@@ -1,55 +1,111 @@
-import sqlite3 from 'sqlite3';
-import path from 'path';
+import { createClient, type Client, type InValue, type Row } from '@libsql/client';
+import dotenv from 'dotenv';
 import fs from 'fs';
+import path from 'path';
 
-const DB_FILE = path.join(__dirname, '../../database.sqlite');
+// index.ts loads dotenv after this module is imported; load here so env is available
+// both at first query and if this file is used from another entry point.
+dotenv.config();
 
-// Ensure database file directory exists
-const dbDir = path.dirname(DB_FILE);
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
-}
+const LOCAL_DB_URL = 'file:./database.sqlite';
 
-// Open SQLite database
-export const db = new sqlite3.Database(DB_FILE, (err) => {
-  if (err) {
-    console.error('Failed to connect to SQLite database:', err);
-  } else {
-    console.log(`Connected to SQLite database at: ${DB_FILE}`);
+let client: Client | null = null;
+
+const isFileUrl = (url: string): boolean =>
+  url.startsWith('file:') || url === ':memory:';
+
+const ensureLocalDbDirectory = (url: string): void => {
+  if (!url.startsWith('file:')) {
+    return;
   }
-});
 
-// Helper functions for promise-based operations
-export const run = (sql: string, params: any[] = []): Promise<{ lastID: number; changes: number }> => {
-  return new Promise((resolve, reject) => {
-    db.run(sql, params, function (err) {
-      if (err) return reject(err);
-      resolve({ lastID: this.lastID, changes: this.changes });
-    });
-  });
+  const rawPath = url.slice('file:'.length);
+  const filePath = path.resolve(process.cwd(), rawPath);
+  const dbDir = path.dirname(filePath);
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+  }
 };
 
-export const get = (sql: string, params: any[] = []): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    db.get(sql, params, (err, row) => {
-      if (err) return reject(err);
-      resolve(row);
-    });
-  });
+const createDbClient = (): Client => {
+  const url = process.env.TURSO_DATABASE_URL?.trim() || LOCAL_DB_URL;
+  const authToken = process.env.TURSO_AUTH_TOKEN?.trim();
+
+  try {
+    if (isFileUrl(url)) {
+      ensureLocalDbDirectory(url);
+      console.log(`Connected to local SQLite database at: ${url}`);
+      return createClient({ url });
+    }
+
+    if (!authToken) {
+      throw new Error(
+        'TURSO_AUTH_TOKEN is required when TURSO_DATABASE_URL points to a remote Turso database.'
+      );
+    }
+
+    console.log(`Connected to Turso database at: ${url}`);
+    return createClient({ url, authToken });
+  } catch (err) {
+    console.error('Failed to connect to the database:', err);
+    throw err;
+  }
 };
 
-export const all = (sql: string, params: any[] = []): Promise<any[]> => {
-  return new Promise((resolve, reject) => {
-    db.all(sql, params, (err, rows) => {
-      if (err) return reject(err);
-      resolve(rows);
-    });
-  });
+const getClient = (): Client => {
+  if (!client) {
+    client = createDbClient();
+  }
+  return client;
 };
 
-// Initialize database tables
+const rowToPlainObject = (row: Row): Record<string, unknown> => {
+  const obj: Record<string, unknown> = {};
+  for (const key of Object.keys(row)) {
+    // libSQL Row is array-like; skip numeric indexes so callers get named fields.
+    if (!/^\d+$/.test(key)) {
+      obj[key] = row[key];
+    }
+  }
+  return obj;
+};
+
+const execute = async (sql: string, params: any[] = []) => {
+  try {
+    return await getClient().execute({
+      sql,
+      args: params as InValue[],
+    });
+  } catch (err) {
+    console.error('Database query failed:', err);
+    throw err;
+  }
+};
+
+export const run = async (
+  sql: string,
+  params: any[] = []
+): Promise<{ lastID: number; changes: number }> => {
+  const result = await execute(sql, params);
+  return {
+    lastID: Number(result.lastInsertRowid ?? 0),
+    changes: result.rowsAffected,
+  };
+};
+
+export const get = async (sql: string, params: any[] = []): Promise<any> => {
+  const result = await execute(sql, params);
+  const row = result.rows[0];
+  return row ? rowToPlainObject(row) : undefined;
+};
+
+export const all = async (sql: string, params: any[] = []): Promise<any[]> => {
+  const result = await execute(sql, params);
+  return result.rows.map(rowToPlainObject);
+};
+
 export const initDb = async (): Promise<void> => {
-  console.log('Initializing SQLite database tables...');
+  console.log('Initializing database tables...');
 
   // Enable foreign key constraints
   await run('PRAGMA foreign_keys = ON;');
@@ -70,9 +126,7 @@ export const initDb = async (): Promise<void> => {
   `);
 
   // Migrations for existing databases
-  try { await run('ALTER TABLE users ADD COLUMN is_verified INTEGER DEFAULT 0'); } catch (e) { /* Ignore if already exists */ }
-  try { await run('ALTER TABLE users ADD COLUMN otp TEXT'); } catch (e) { /* Ignore */ }
-  try { await run('ALTER TABLE users ADD COLUMN otp_expires_at DATETIME'); } catch (e) { /* Ignore */ }
+
 
   // 2. Resumes Table
   await run(`
@@ -120,5 +174,5 @@ export const initDb = async (): Promise<void> => {
     )
   `);
 
-  console.log('SQLite database initialization complete.');
+  console.log('Database initialization complete.');
 };
