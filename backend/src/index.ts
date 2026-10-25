@@ -14,12 +14,16 @@ const app = express();
 const port =  Number(process.env.PORT) || 5001;
 
 // Set FRONTEND_URL in Render to your deployed Vercel URL.
+const allowedOrigins = [
+  'https://snboseproject-omega.vercel.app',
+  'https://snboseproject-icxv3hw23-sn-bose.vercel.app',
+];
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || '*',
+    origin: allowedOrigins,
   })
 );
-
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
