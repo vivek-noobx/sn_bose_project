@@ -17,6 +17,7 @@ const port =  Number(process.env.PORT) || 5001;
 const allowedOrigins = [
   'https://snboseproject-omega.vercel.app',
   'https://snboseproject-icxv3hw23-sn-bose.vercel.app',
+  'http://localhost:5173'
 ];
 
 app.use(
