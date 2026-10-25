@@ -147,8 +147,8 @@ const Dashboard: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center p-16 space-y-4">
-        <Loader2 className="w-10 h-10 text-accent-seafoam animate-spin" />
-        <p className="text-sm font-semibold text-primary-dark">Loading dashboard workspace...</p>
+        <Loader2 className="w-10 h-10 text-orange-500 animate-spin" />
+        <p className="text-sm font-semibold text-gray-400">Loading dashboard workspace...</p>
       </div>
     );
   }
@@ -166,12 +166,12 @@ const Dashboard: React.FC = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <h2 className="text-2xl font-black text-primary-dark">Recruiter Dashboard</h2>
-            <p className="text-slate-500">Manage candidates, view assessments, and post new jobs.</p>
+            <h2 className="text-2xl font-black text-white">Recruiter Dashboard</h2>
+            <p className="text-gray-500">Manage candidates, view assessments, and post new jobs.</p>
           </div>
           <button 
-            onClick={() => navigate('/create-job')}
-            className="inline-flex items-center px-5 py-2.5 bg-accent-seafoam text-primary-dark font-bold rounded-xl shadow-sm hover:bg-accent-seafoam/90 transition-all"
+            onClick={() => navigate('/dashboard/create-job')}
+            className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold rounded-xl shadow-lg shadow-orange-500/20 hover:from-orange-500 hover:to-amber-400 transition-all"
           >
             <Plus className="w-5 h-5 mr-2" />
             Post New Job
@@ -183,22 +183,22 @@ const Dashboard: React.FC = () => {
           <StatCard 
             title="Active Job Postings" 
             value={myJobs.length.toString()} 
-            icon={<Briefcase className="w-8 h-8 text-primary-dark" />} 
+            icon={<Briefcase className="w-8 h-8" />} 
           />
           <StatCard 
             title="Total Candidates" 
             value={totalCands.toString()} 
-            icon={<Users className="w-8 h-8 text-primary-dark" />} 
+            icon={<Users className="w-8 h-8" />} 
           />
           <StatCard 
             title="Assessments Conducted" 
             value={completedTests.toString()} 
-            icon={<CheckCircle2 className="w-8 h-8 text-primary-dark" />} 
+            icon={<CheckCircle2 className="w-8 h-8" />} 
           />
           <StatCard 
             title="Average Assessment Grade" 
             value={`${avgPercentage}%`} 
-            icon={<TrendingUp className="w-8 h-8 text-primary-dark" />} 
+            icon={<TrendingUp className="w-8 h-8" />} 
           />
         </div>
 
@@ -207,87 +207,87 @@ const Dashboard: React.FC = () => {
           
           {/* Candidates List Table */}
           <div className="xl:col-span-2 space-y-8">
-            <div className="bg-white rounded-2xl border border-accent-teal/20 shadow-sm p-6">
-              <h3 className="text-lg font-bold text-primary-dark mb-4">Candidates Overview</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-100">
-                <thead>
-                  <tr className="text-left text-xs font-bold text-slate-400 uppercase tracking-wider">
-                    <th className="pb-3 font-semibold">Name</th>
-                    <th className="pb-3 font-semibold">Email</th>
-                    <th className="pb-3 font-semibold">Resume Status</th>
-                    <th className="pb-3 font-semibold">Test Count</th>
-                    <th className="pb-3 font-semibold">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-sm text-primary-dark">
-                  {candidates.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="py-6 text-center text-slate-500">
-                        No candidates registered in the system yet.
-                      </td>
+            <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+              <h3 className="text-lg font-bold text-white mb-4">Candidates Overview</h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-white/[0.06]">
+                  <thead>
+                    <tr className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      <th className="pb-3 font-semibold">Name</th>
+                      <th className="pb-3 font-semibold">Email</th>
+                      <th className="pb-3 font-semibold">Resume Status</th>
+                      <th className="pb-3 font-semibold text-center">Test Count</th>
+                      <th className="pb-3 font-semibold">Action</th>
                     </tr>
-                  ) : (
-                    candidates.map((cand) => {
-                      const candAssessments = assessments.filter(a => a.user_id === cand.id);
-                      return (
-                        <tr key={cand.id} className="hover:bg-slate-50/50 transition duration-150">
-                          <td className="py-3.5 font-semibold">{cand.name}</td>
-                          <td className="py-3.5 text-slate-500">{cand.email}</td>
-                          <td className="py-3.5">
-                            {cand.resume ? (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent-mint text-primary-dark border border-accent-teal/30">
-                                Parsed: {cand.resume.fileName}
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-100">
-                                No Resume Uploaded
-                              </span>
-                            )}
-                          </td>
-                          <td className="py-3.5 font-bold text-center">{candAssessments.length}</td>
-                          <td className="py-3.5">
-                            <button
-                              onClick={() => setSelectedCandidate(cand)}
-                              className="inline-flex items-center text-sm font-bold text-primary-dark hover:text-accent-teal transition-colors"
-                            >
-                              Review <ChevronRight className="w-4 h-4 ml-1" />
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-white/[0.06] text-sm text-gray-300">
+                    {candidates.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="py-6 text-center text-gray-500">
+                          No candidates registered in the system yet.
+                        </td>
+                      </tr>
+                    ) : (
+                      candidates.map((cand) => {
+                        const candAssessments = assessments.filter(a => a.user_id === cand.id);
+                        return (
+                          <tr key={cand.id} className="hover:bg-white/[0.02] transition duration-150">
+                            <td className="py-3.5 font-semibold text-white">{cand.name}</td>
+                            <td className="py-3.5 text-gray-400">{cand.email}</td>
+                            <td className="py-3.5">
+                              {cand.resume ? (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                  Parsed: {cand.resume.fileName}
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20">
+                                  No Resume Uploaded
+                                </span>
+                              )}
+                            </td>
+                            <td className="py-3.5 font-bold text-center text-white">{candAssessments.length}</td>
+                            <td className="py-3.5">
+                              <button
+                                onClick={() => setSelectedCandidate(cand)}
+                                className="inline-flex items-center text-sm font-bold text-orange-400 hover:text-orange-300 transition-colors"
+                              >
+                                Review <ChevronRight className="w-4 h-4 ml-1" />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             {/* My Job Postings */}
-            <div className="bg-white rounded-2xl border border-accent-teal/20 shadow-sm p-6">
-              <h3 className="text-lg font-bold text-primary-dark mb-4">My Job Postings</h3>
+            <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+              <h3 className="text-lg font-bold text-white mb-4">My Job Postings</h3>
               <div className="space-y-4">
                 {myJobs.length === 0 ? (
-                  <p className="text-sm text-slate-500 text-center py-6 border border-dashed border-slate-200 rounded-xl">
+                  <p className="text-sm text-gray-500 text-center py-6 border border-dashed border-white/10 rounded-xl">
                     You haven't posted any custom jobs yet.
                   </p>
                 ) : (
                   myJobs.map((job) => (
-                    <div key={job.id} className="p-4 rounded-xl border border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div key={job.id} className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                       <div className="flex-1">
-                        <h4 className="font-bold text-sm text-primary-dark">{job.title}</h4>
-                        <p className="text-xs text-slate-500">{job.company_name} • <span className="text-slate-400">Posted on {new Date(job.created_at).toLocaleDateString()}</span></p>
+                        <h4 className="font-bold text-sm text-white">{job.title}</h4>
+                        <p className="text-xs text-gray-400">{job.company_name} • <span className="text-gray-600">Posted on {new Date(job.created_at).toLocaleDateString()}</span></p>
                       </div>
                       <div className="flex items-center space-x-2 w-full sm:w-auto">
                         <button
-                          onClick={() => navigate(`/job-candidates/${job.id}`)}
-                          className="flex-1 sm:flex-none inline-flex items-center justify-center px-3 py-1.5 bg-accent-mint text-primary-dark text-xs font-bold rounded-lg border border-accent-teal/30 hover:bg-accent-teal/20 transition-colors"
+                          onClick={() => navigate(`/dashboard/job-candidates/${job.id}`)}
+                          className="flex-1 sm:flex-none inline-flex items-center justify-center px-3 py-1.5 bg-orange-500/10 text-orange-400 border border-orange-500/20 rounded-lg hover:bg-orange-500/20 text-xs font-bold transition-colors"
                         >
                           <Users className="w-3.5 h-3.5 mr-1.5" /> Pipeline
                         </button>
                         <button
                           onClick={() => handleDeleteJob(job.id)}
-                          className="flex-1 sm:flex-none inline-flex items-center justify-center px-3 py-1.5 bg-red-50 text-red-700 text-xs font-bold rounded-lg border border-red-100 hover:bg-red-100 transition-colors"
+                          className="flex-1 sm:flex-none inline-flex items-center justify-center px-3 py-1.5 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-500/20 text-xs font-bold transition-colors"
                         >
                           <Trash2 className="w-3.5 h-3.5 mr-1.5" /> Delete
                         </button>
@@ -300,27 +300,27 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Recent Evaluations */}
-          <div className="bg-white rounded-2xl border border-accent-teal/20 shadow-sm p-6">
-            <h3 className="text-lg font-bold text-primary-dark mb-4">Recent Tests Evaluated</h3>
+          <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+            <h3 className="text-lg font-bold text-white mb-4">Recent Tests Evaluated</h3>
             <div className="space-y-4">
               {assessments.length === 0 ? (
-                <p className="text-sm text-slate-500 text-center py-6">No test scores recorded yet.</p>
+                <p className="text-sm text-gray-500 text-center py-6">No test scores recorded yet.</p>
               ) : (
                 assessments.slice(0, 5).map((record) => (
                   <div 
                     key={record.id} 
-                    className="p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 transition cursor-pointer flex justify-between items-center gap-4"
+                    className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] transition cursor-pointer flex justify-between items-center gap-4"
                     onClick={() => setSelectedAssessment(record)}
                   >
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-bold text-sm text-primary-dark truncate">{record.candidate_name || 'Candidate'}</h4>
-                      <p className="text-xs text-slate-500 truncate">{record.test_title}</p>
-                      <p className="text-xxs text-slate-400 mt-1 flex items-center">
+                      <h4 className="font-bold text-sm text-white truncate">{record.candidate_name || 'Candidate'}</h4>
+                      <p className="text-xs text-gray-400 truncate">{record.test_title}</p>
+                      <p className="text-xs text-gray-600 mt-1 flex items-center">
                         <Calendar className="w-3 h-3 mr-1" /> {new Date(record.taken_at).toLocaleDateString()}
                       </p>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <span className="text-sm font-bold text-primary-dark bg-accent-seafoam/35 border border-accent-seafoam px-2.5 py-1 rounded-lg whitespace-nowrap">
+                      <span className="text-sm font-bold bg-orange-500/15 border border-orange-500/30 text-orange-400 px-2.5 py-1 rounded-lg whitespace-nowrap">
                         {record.score}/{record.max_score}
                       </span>
                     </div>
@@ -366,23 +366,23 @@ const Dashboard: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-black text-primary-dark">Welcome back, {user?.name}!</h2>
-        <p className="text-slate-500">Track your credentials, resume details, and AI skill tests here.</p>
+        <h2 className="text-2xl font-black text-white">Welcome back, {user?.name}!</h2>
+        <p className="text-gray-500">Track your credentials, resume details, and AI skill tests here.</p>
       </div>
 
       {!resume ? (
         // Prompt Upload
-        <div className="bg-accent-mint/35 border border-accent-seafoam/30 rounded-2xl p-8 text-center max-w-2xl">
-          <div className="inline-flex items-center justify-center p-4 bg-white rounded-full mb-4 shadow-sm">
-            <FileText className="w-8 h-8 text-accent-teal" />
+        <div className="bg-orange-500/5 border border-orange-500/20 rounded-2xl p-8 text-center max-w-2xl">
+          <div className="inline-flex items-center justify-center p-4 bg-orange-500/10 text-orange-400 rounded-full mb-4 shadow-sm">
+            <FileText className="w-8 h-8" />
           </div>
-          <h3 className="text-xl font-bold text-primary-dark mb-2">Build Your AI Job Match Profile</h3>
-          <p className="text-sm text-primary-dark/80 max-w-md mx-auto mb-6">
+          <h3 className="text-xl font-bold text-white mb-2">Build Your AI Job Match Profile</h3>
+          <p className="text-sm text-gray-400 max-w-md mx-auto mb-6">
             Upload your resume in PDF format. Our LLM parser will extract structured skills, projects, and experiences to feed your job search!
           </p>
           <button 
-            onClick={() => navigate('/upload')}
-            className="inline-flex items-center px-6 py-3 bg-accent-seafoam text-primary-dark font-bold rounded-xl shadow-md hover:bg-accent-seafoam/90 transition-all"
+            onClick={() => navigate('/dashboard/upload')}
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold rounded-xl shadow-lg shadow-orange-500/20 hover:from-orange-500 hover:to-amber-400 transition-all"
           >
             <Plus className="w-5 h-5 mr-2" />
             Upload Your Resume
@@ -393,17 +393,17 @@ const Dashboard: React.FC = () => {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           {/* Resume Summary Panel */}
           <div className="xl:col-span-2 space-y-6">
-            <div className="bg-white rounded-2xl border border-accent-teal/20 shadow-sm p-6">
+            <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h3 className="text-lg font-bold text-primary-dark flex items-center">
-                    <FileText className="w-5 h-5 mr-2 text-accent-teal" /> Profile Summary
+                  <h3 className="text-lg font-bold text-white flex items-center">
+                    <FileText className="w-5 h-5 mr-2 text-orange-400" /> Profile Summary
                   </h3>
-                  <p className="text-xs text-slate-400 mt-1">Parsed from: {resume.fileName}</p>
+                  <p className="text-xs text-gray-500 mt-1">Parsed from: {resume.fileName}</p>
                 </div>
                 <button
-                  onClick={() => navigate('/upload')}
-                  className="text-xs font-bold text-primary-dark underline hover:text-accent-teal"
+                  onClick={() => navigate('/dashboard/upload')}
+                  className="text-xs font-bold text-orange-400 hover:text-orange-300 underline transition-colors"
                 >
                   Update Resume
                 </button>
@@ -411,10 +411,10 @@ const Dashboard: React.FC = () => {
 
               {/* Skills Section */}
               <div className="mb-6">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Extracted Skills</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2.5">Extracted Skills</h4>
                 <div className="flex flex-wrap gap-2">
                   {resume.parsedData.skills.map((skill, index) => (
-                    <span key={index} className="px-3 py-1 bg-accent-mint text-primary-dark border border-accent-seafoam/20 text-xs font-bold rounded-full">
+                    <span key={index} className="px-3 py-1 bg-orange-500/10 text-orange-300 border border-orange-500/20 text-xs font-semibold rounded-full">
                       {skill}
                     </span>
                   ))}
@@ -423,12 +423,12 @@ const Dashboard: React.FC = () => {
 
               {/* Experience Highlights */}
               <div className="mb-6">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Recent Experience</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">Recent Experience</h4>
                 <div className="space-y-4">
                   {resume.parsedData.experience.slice(0, 2).map((exp, idx) => (
-                    <div key={idx} className="border-l-2 border-accent-mint pl-4">
-                      <h5 className="font-bold text-sm text-primary-dark">{exp.role}</h5>
-                      <p className="text-xs text-slate-500">{exp.company} • {exp.duration}</p>
+                    <div key={idx} className="border-l-2 border-orange-500/30 pl-4">
+                      <h5 className="font-bold text-sm text-white">{exp.role}</h5>
+                      <p className="text-xs text-gray-400">{exp.company} • {exp.duration}</p>
                     </div>
                   ))}
                 </div>
@@ -436,20 +436,20 @@ const Dashboard: React.FC = () => {
 
               {/* Education Highlights */}
               <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Education</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">Education</h4>
                 <div className="space-y-3">
                   {resume.parsedData.education.map((edu, idx) => (
                     <div key={idx} className="text-sm">
-                      <span className="font-bold text-primary-dark">{edu.degree}</span> - <span className="text-slate-500">{edu.institution}</span>
+                      <span className="font-bold text-white">{edu.degree}</span> - <span className="text-gray-400">{edu.institution}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-slate-100 flex justify-end">
+              <div className="mt-8 pt-6 border-t border-white/[0.06] flex justify-end">
                 <button
-                  onClick={() => navigate('/matches')}
-                  className="px-5 py-2.5 bg-accent-seafoam hover:bg-accent-seafoam/90 text-primary-dark font-bold text-sm rounded-xl shadow-sm transition"
+                  onClick={() => navigate('/dashboard/matches')}
+                  className="px-5 py-2.5 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold text-sm rounded-xl shadow-lg shadow-orange-500/20 hover:from-orange-500 hover:to-amber-400 transition-all"
                 >
                   Find Job Matches
                 </button>
@@ -458,37 +458,37 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Candidate Assessment History list */}
-          <div className="bg-white rounded-2xl border border-accent-teal/20 shadow-sm p-6">
+          <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-primary-dark flex items-center">
-                <Award className="w-5 h-5 mr-2 text-accent-teal" /> Skill Assessments
+              <h3 className="text-lg font-bold text-white flex items-center">
+                <Award className="w-5 h-5 mr-2 text-orange-400" /> Skill Assessments
               </h3>
             </div>
 
             <div className="space-y-4">
               {assessments.length === 0 ? (
-                <div className="text-center py-8 bg-slate-50/50 rounded-xl border border-dashed border-slate-200">
-                  <p className="text-xs text-slate-400 max-w-xs mx-auto">
+                <div className="text-center py-8 bg-white/[0.02] rounded-xl border border-dashed border-white/10">
+                  <p className="text-xs text-gray-500 max-w-xs mx-auto">
                     You haven't taken any custom assessments yet. Find job matches to start testing.
                   </p>
                 </div>
               ) : (
                 assessments.map((a) => (
-                  <div key={a.id} className="p-4 rounded-xl border border-slate-100 bg-slate-50/50 flex flex-col space-y-3">
+                  <div key={a.id} className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] flex flex-col space-y-3">
                     <div className="flex justify-between items-start">
                       <div>
-                        <h4 className="font-bold text-sm text-primary-dark leading-snug">{a.test_title}</h4>
-                        <p className="text-xs text-slate-500 mt-0.5">{a.job_role}</p>
+                        <h4 className="font-bold text-sm text-white leading-snug">{a.test_title}</h4>
+                        <p className="text-xs text-gray-400 mt-0.5">{a.job_role}</p>
                       </div>
-                      <span className="text-xs font-bold text-primary-dark bg-accent-seafoam/35 border border-accent-seafoam px-2 py-0.5 rounded-md">
+                      <span className="text-xs font-bold bg-orange-500/15 border border-orange-500/30 text-orange-400 px-2.5 py-1 rounded-lg">
                         {a.score}/{a.max_score}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-xxs text-slate-400">
+                    <div className="flex items-center justify-between text-xs text-gray-600">
                       <span>{new Date(a.taken_at).toLocaleDateString()}</span>
                       <button
                         onClick={() => setSelectedAssessment(a)}
-                        className="text-primary-dark font-bold hover:underline"
+                        className="text-orange-400 hover:text-orange-300 font-bold underline transition-colors"
                       >
                         View AI Report
                       </button>
@@ -512,13 +512,13 @@ const Dashboard: React.FC = () => {
 // ── SUBCOMPONENTS ────────────────────────────────────────────────────────────
 
 const StatCard = ({ title, value, icon }: { title: string; value: string; icon: React.ReactNode }) => (
-  <div className="bg-white rounded-2xl p-6 shadow-sm border border-accent-teal/20 flex items-center space-x-4">
-    <div className="p-3 bg-accent-mint rounded-xl text-primary-dark border border-accent-teal/15">
+  <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 flex items-center space-x-4">
+    <div className="p-3 bg-orange-500/10 text-orange-400 rounded-xl">
       {icon}
     </div>
     <div>
-      <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{title}</p>
-      <p className="text-2xl font-black text-primary-dark mt-1">{value}</p>
+      <p className="text-gray-500 uppercase text-xs tracking-wider font-bold">{title}</p>
+      <p className="text-white text-2xl font-black mt-1">{value}</p>
     </div>
   </div>
 );
@@ -533,35 +533,35 @@ interface CandidateDetailModalProps {
 
 const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({ candidate, assessments, onClose, onOpenReport }) => {
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-primary-dark/40 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl border border-accent-teal/20 max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-[#111] border border-white/[0.08] rounded-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in duration-200">
         
         {/* Header */}
-        <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <div className="p-6 border-b border-white/[0.06] flex items-center justify-between bg-[#0d0d0d]">
           <div>
-            <h3 className="text-xl font-bold text-primary-dark">{candidate.name}</h3>
-            <p className="text-sm text-slate-500">{candidate.email}</p>
+            <h3 className="text-xl font-bold text-white">{candidate.name}</h3>
+            <p className="text-sm text-gray-500">{candidate.email}</p>
           </div>
-          <button onClick={onClose} className="p-1.5 hover:bg-slate-100 rounded-lg transition text-slate-400 hover:text-slate-600">
+          <button onClick={onClose} className="p-1.5 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Scrollable Content */}
-        <div className="p-6 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-2 gap-8 text-primary-dark">
+        <div className="p-6 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-300">
           {/* Left Side: parsed resume */}
           <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-wider text-slate-400 pb-1 border-b border-slate-100">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 pb-2 border-b border-white/[0.06]">
               Resume Profile Details
             </h4>
             
             {candidate.resume ? (
               <>
                 <div>
-                  <h5 className="font-bold text-xs text-slate-400 uppercase tracking-wider mb-2">Technical Skills</h5>
+                  <h5 className="font-bold text-xs text-gray-500 uppercase tracking-wider mb-2">Technical Skills</h5>
                   <div className="flex flex-wrap gap-1.5">
                     {candidate.resume.parsedData.skills.map((skill, index) => (
-                      <span key={index} className="px-2 py-0.5 bg-accent-mint text-primary-dark text-xs font-semibold rounded-full border border-accent-seafoam/20">
+                      <span key={index} className="px-3 py-1 bg-orange-500/10 text-orange-300 border border-orange-500/20 text-xs font-semibold rounded-full">
                         {skill}
                       </span>
                     ))}
@@ -569,31 +569,31 @@ const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({ candidate, 
                 </div>
 
                 <div>
-                  <h5 className="font-bold text-xs text-slate-400 uppercase tracking-wider mb-2">Experience History</h5>
+                  <h5 className="font-bold text-xs text-gray-500 uppercase tracking-wider mb-2">Experience History</h5>
                   <div className="space-y-3">
                     {candidate.resume.parsedData.experience.map((exp, idx) => (
                       <div key={idx} className="text-sm">
-                        <span className="font-bold text-primary-dark">{exp.role}</span> at <span className="font-semibold text-slate-700">{exp.company}</span>
-                        <p className="text-xs text-slate-500 mt-0.5">{exp.duration}</p>
+                        <span className="font-bold text-white">{exp.role}</span> at <span className="font-semibold text-gray-300">{exp.company}</span>
+                        <p className="text-xs text-gray-500 mt-0.5">{exp.duration}</p>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <h5 className="font-bold text-xs text-slate-400 uppercase tracking-wider mb-2">Key Projects</h5>
+                  <h5 className="font-bold text-xs text-gray-500 uppercase tracking-wider mb-2">Key Projects</h5>
                   <div className="space-y-3">
                     {candidate.resume.parsedData.projects.map((proj, idx) => (
                       <div key={idx} className="text-sm">
-                        <h6 className="font-bold text-primary-dark">{proj.title}</h6>
-                        <p className="text-xs text-slate-500 line-clamp-2 mt-0.5">{proj.description}</p>
+                        <h6 className="font-bold text-white">{proj.title}</h6>
+                        <p className="text-xs text-gray-400 line-clamp-2 mt-0.5">{proj.description}</p>
                       </div>
                     ))}
                   </div>
                 </div>
               </>
             ) : (
-              <div className="text-center py-12 text-slate-400 border border-dashed border-slate-200 rounded-xl">
+              <div className="text-center py-12 text-gray-500 border border-dashed border-white/10 rounded-xl">
                 No resume parsed for this candidate yet.
               </div>
             )}
@@ -601,32 +601,32 @@ const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({ candidate, 
 
           {/* Right Side: assessments */}
           <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-wider text-slate-400 pb-1 border-b border-slate-100">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 pb-2 border-b border-white/[0.06]">
               Assessment Performance
             </h4>
 
             {assessments.length === 0 ? (
-              <div className="text-center py-12 text-slate-400 bg-slate-50/50 border border-slate-150 rounded-xl">
+              <div className="text-center py-12 text-gray-500 bg-white/[0.02] border border-white/[0.06] rounded-xl">
                 Candidate has not taken any skill assessments yet.
               </div>
             ) : (
               <div className="space-y-4">
                 {assessments.map((a) => (
-                  <div key={a.id} className="p-4 rounded-xl border border-slate-150 bg-slate-50 flex items-center justify-between">
+                  <div key={a.id} className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] flex items-center justify-between">
                     <div>
-                      <h5 className="font-bold text-sm text-primary-dark truncate">{a.test_title}</h5>
-                      <p className="text-xs text-slate-500 capitalize">{a.job_role}</p>
-                      <span className="text-xxs text-slate-400 mt-1 block">
+                      <h5 className="font-bold text-sm text-white truncate">{a.test_title}</h5>
+                      <p className="text-xs text-gray-400 capitalize">{a.job_role}</p>
+                      <span className="text-xs text-gray-600 mt-1 block">
                         {new Date(a.taken_at).toLocaleDateString()}
                       </span>
                     </div>
                     <div className="flex flex-col items-end space-y-2">
-                      <span className="text-xs font-bold text-primary-dark bg-accent-seafoam/35 border border-accent-seafoam px-2.5 py-0.5 rounded-md">
+                      <span className="text-xs font-bold bg-orange-500/15 border border-orange-500/30 text-orange-400 px-2.5 py-0.5 rounded-lg">
                         {a.score}/{a.max_score}
                       </span>
                       <button
                         onClick={() => onOpenReport(a)}
-                        className="text-xs font-bold text-primary-dark underline hover:text-accent-teal"
+                        className="text-xs font-bold text-orange-400 hover:text-orange-300 underline transition-colors"
                       >
                         View AI Report
                       </button>
@@ -639,10 +639,10 @@ const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({ candidate, 
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-100 flex justify-end bg-slate-50/50">
+        <div className="p-4 border-t border-white/[0.06] flex justify-end bg-[#0d0d0d]">
           <button
             onClick={onClose}
-            className="px-5 py-2 bg-primary-dark text-white rounded-xl text-sm font-semibold hover:bg-primary-dark/90"
+            className="px-5 py-2 bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white rounded-xl text-sm font-semibold transition-colors"
           >
             Close
           </button>
@@ -666,28 +666,28 @@ export const EvaluationReportModal: React.FC<EvaluationReportModalProps> = ({ re
   const gradePct = Math.round((record.score / record.max_score) * 100);
 
   return (
-    <div className="fixed inset-0 z-[100] overflow-y-auto bg-primary-dark/40 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl border border-accent-teal/20 max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[100] overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-[#111] border border-white/[0.08] rounded-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in duration-200">
         
         {/* Header */}
-        <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <div className="p-6 border-b border-white/[0.06] flex items-center justify-between bg-[#0d0d0d]">
           <div>
-            <h3 className="text-lg font-black text-primary-dark truncate">{record.test_title}</h3>
-            <p className="text-xs text-slate-500 capitalize">{record.job_role} • Evaluated by TalentAI LLM</p>
+            <h3 className="text-lg font-black text-white truncate">{record.test_title}</h3>
+            <p className="text-xs text-gray-500 capitalize">{record.job_role} • Evaluated by TalentAI LLM</p>
           </div>
-          <button onClick={onClose} className="p-1.5 hover:bg-slate-100 rounded-lg transition text-slate-400 hover:text-slate-600">
+          <button onClick={onClose} className="p-1.5 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex border-b border-slate-100 bg-slate-50/30">
+        <div className="flex border-b border-white/[0.06] bg-[#0d0d0d]">
           <button
             onClick={() => setActiveTab('overview')}
             className={`px-6 py-3.5 text-sm font-bold border-b-2 transition-all ${
               activeTab === 'overview'
-                ? 'border-accent-seafoam text-primary-dark font-extrabold'
-                : 'border-transparent text-slate-400 hover:text-slate-600'
+                ? 'border-orange-500 text-white font-bold'
+                : 'border-transparent text-gray-500 hover:text-gray-300'
             }`}
           >
             Performance Summary
@@ -696,8 +696,8 @@ export const EvaluationReportModal: React.FC<EvaluationReportModalProps> = ({ re
             onClick={() => setActiveTab('questions')}
             className={`px-6 py-3.5 text-sm font-bold border-b-2 transition-all ${
               activeTab === 'questions'
-                ? 'border-accent-seafoam text-primary-dark font-extrabold'
-                : 'border-transparent text-slate-400 hover:text-slate-600'
+                ? 'border-orange-500 text-white font-bold'
+                : 'border-transparent text-gray-500 hover:text-gray-300'
             }`}
           >
             Question Analysis
@@ -705,20 +705,20 @@ export const EvaluationReportModal: React.FC<EvaluationReportModalProps> = ({ re
         </div>
 
         {/* Scrollable Content */}
-        <div className="p-6 overflow-y-auto flex-1 text-primary-dark">
+        <div className="p-6 overflow-y-auto flex-1 text-gray-300">
           
           {/* Tab 1: Overview */}
           {activeTab === 'overview' && (
             <div className="space-y-8">
               {/* Score breakdown bar */}
-              <div className="flex flex-col md:flex-row items-center gap-8 bg-accent-mint/30 border border-accent-seafoam/25 rounded-2xl p-6">
-                <div className="flex-shrink-0 flex flex-col items-center justify-center w-24 h-24 rounded-full border-4 border-accent-seafoam bg-white shadow-sm">
-                  <span className="text-2xl font-black text-primary-dark">{gradePct}%</span>
-                  <span className="text-xxs font-bold text-slate-400 mt-0.5">Grade</span>
+              <div className="flex flex-col md:flex-row items-center gap-8 bg-orange-500/5 border border-orange-500/20 rounded-2xl p-6">
+                <div className="flex-shrink-0 flex flex-col items-center justify-center w-24 h-24 rounded-full border-4 border-orange-500/40 bg-[#0d0d0d] shadow-lg shadow-orange-500/10">
+                  <span className="text-2xl font-black text-white">{gradePct}%</span>
+                  <span className="text-xs font-bold text-gray-500 mt-0.5">Grade</span>
                 </div>
                 <div className="flex-1 text-center md:text-left">
-                  <h4 className="text-lg font-bold text-primary-dark">Score details: {record.score} / {record.max_score} marks</h4>
-                  <p className="text-sm text-slate-500 mt-1">
+                  <h4 className="text-lg font-bold text-white">Score details: {record.score} / {record.max_score} marks</h4>
+                  <p className="text-sm text-gray-400 mt-1">
                     This skill score represents a combined assessment of Multiple Choice Question (MCQ) autogrades, 
                     AI code performance executions, and situational scenario feedback.
                   </p>
@@ -728,32 +728,32 @@ export const EvaluationReportModal: React.FC<EvaluationReportModalProps> = ({ re
               {/* Strengths and Weaknesses grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Strengths */}
-                <div className="bg-emerald-50/30 border border-emerald-100 rounded-xl p-5">
-                  <h4 className="font-bold text-emerald-800 text-sm mb-3 uppercase tracking-wider flex items-center">
+                <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl p-5">
+                  <h4 className="font-bold text-emerald-400 text-sm mb-3 uppercase tracking-wider flex items-center">
                     <CheckCircle2 className="w-4 h-4 mr-2" /> Candidate Strengths
                   </h4>
-                  <ul className="list-disc list-inside text-sm text-emerald-950 space-y-2">
+                  <ul className="list-disc list-inside text-sm text-emerald-200/90 space-y-2">
                     {evalReport.strengths?.map((str, idx) => <li key={idx}>{str}</li>) || <li>Analytical approach demonstrated.</li>}
                   </ul>
                 </div>
 
                 {/* Weaknesses */}
-                <div className="bg-red-50/20 border border-red-100 rounded-xl p-5">
-                  <h4 className="font-bold text-red-800 text-sm mb-3 uppercase tracking-wider flex items-center">
+                <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl p-5">
+                  <h4 className="font-bold text-red-400 text-sm mb-3 uppercase tracking-wider flex items-center">
                     <AlertCircle className="w-4 h-4 mr-2" /> Areas for Improvement
                   </h4>
-                  <ul className="list-disc list-inside text-sm text-red-950 space-y-2">
+                  <ul className="list-disc list-inside text-sm text-red-200/90 space-y-2">
                     {evalReport.weaknesses?.map((wk, idx) => <li key={idx}>{wk}</li>) || <li>Could improve depth of answers.</li>}
                   </ul>
                 </div>
               </div>
 
               {/* Actionable Recommendations */}
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
-                <h4 className="font-bold text-primary-dark text-sm mb-3 uppercase tracking-wider">
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-5">
+                <h4 className="font-bold text-white text-sm mb-3 uppercase tracking-wider">
                   Actionable Recommendations
                 </h4>
-                <ul className="list-disc list-inside text-sm text-slate-700 space-y-2">
+                <ul className="list-disc list-inside text-sm text-gray-300 space-y-2">
                   {evalReport.recommendations?.map((rec, idx) => <li key={idx}>{rec}</li>) || <li>Continue practicing language semantics.</li>}
                 </ul>
               </div>
@@ -764,7 +764,7 @@ export const EvaluationReportModal: React.FC<EvaluationReportModalProps> = ({ re
           {activeTab === 'questions' && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[50vh] min-h-[350px]">
               {/* Question list selector */}
-              <div className="border border-slate-100 rounded-xl overflow-y-auto divide-y divide-slate-100 bg-slate-50/50">
+              <div className="border border-white/[0.06] rounded-xl overflow-y-auto divide-y divide-white/[0.06] bg-[#0d0d0d]">
                 {record.questions.questions.map((q: any, idx: number) => {
                   const qEval = evalReport.questionEvaluations?.find(qe => qe.id === q.id);
                   const isCorrect = qEval?.passed ?? false;
@@ -773,15 +773,15 @@ export const EvaluationReportModal: React.FC<EvaluationReportModalProps> = ({ re
                       key={q.id}
                       onClick={() => setSelectedQuestionIdx(idx)}
                       className={`w-full text-left p-3.5 transition flex justify-between items-start ${
-                        selectedQuestionIdx === idx ? 'bg-white shadow-sm font-bold border-l-4 border-accent-seafoam' : 'hover:bg-slate-100/50'
+                        selectedQuestionIdx === idx ? 'bg-white/[0.04] shadow-sm font-bold border-l-4 border-orange-500' : 'hover:bg-white/[0.02]'
                       }`}
                     >
                       <div className="truncate pr-2">
-                        <span className="text-xxs font-bold text-slate-400 block uppercase">Question {idx + 1} ({q.type})</span>
-                        <span className="text-sm text-primary-dark block truncate mt-0.5">{q.question}</span>
+                        <span className="text-xs font-bold text-gray-500 block uppercase">Question {idx + 1} ({q.type})</span>
+                        <span className="text-sm text-white block truncate mt-0.5">{q.question}</span>
                       </div>
-                      <span className={`text-xxs px-2 py-0.5 rounded font-bold ${
-                        isCorrect ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-red-50 text-red-700 border border-red-100'
+                      <span className={`text-xs px-2 py-0.5 rounded font-bold ${
+                        isCorrect ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'
                       }`}>
                         {qEval?.score ?? 0}pts
                       </span>
@@ -791,7 +791,7 @@ export const EvaluationReportModal: React.FC<EvaluationReportModalProps> = ({ re
               </div>
 
               {/* Selected question analysis panel */}
-              <div className="md:col-span-2 border border-slate-150 rounded-xl p-5 overflow-y-auto flex flex-col bg-white">
+              <div className="md:col-span-2 border border-white/[0.06] rounded-xl p-5 overflow-y-auto flex flex-col bg-[#0d0d0d]">
                 {(() => {
                   const q = record.questions.questions[selectedQuestionIdx];
                   const qEval = evalReport.questionEvaluations?.find(qe => qe.id === q.id);
@@ -801,42 +801,42 @@ export const EvaluationReportModal: React.FC<EvaluationReportModalProps> = ({ re
                     <div className="space-y-4">
                       {/* Q header */}
                       <div>
-                        <span className="text-xxs font-bold text-slate-400 uppercase tracking-wide block">{q.type} Question • Difficulty {q.difficulty}</span>
-                        <h4 className="text-base font-bold text-primary-dark mt-1">{q.question}</h4>
+                        <span className="text-xs font-bold text-gray-500 uppercase tracking-wide block">{q.type} Question • Difficulty {q.difficulty}</span>
+                        <h4 className="text-base font-bold text-white mt-1">{q.question}</h4>
                       </div>
 
                       {/* Display scenario details if scenario */}
                       {q.type === 'scenario' && q.context && (
-                        <div className="bg-slate-50 border border-slate-150 p-3.5 rounded-lg text-xs text-slate-600">
-                          <span className="font-bold text-slate-500 block mb-1">SCENARIO CONTEXT</span>
+                        <div className="bg-white/[0.02] border border-white/[0.06] p-3.5 rounded-lg text-xs text-gray-300">
+                          <span className="font-bold text-gray-500 block mb-1">SCENARIO CONTEXT</span>
                           {q.context}
                         </div>
                       )}
 
                       {/* Candidate response */}
-                      <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
-                        <h5 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Submitted Response</h5>
+                      <div className="p-4 bg-white/[0.02] border border-white/[0.06] rounded-xl">
+                        <h5 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Submitted Response</h5>
                         {q.type === 'coding' ? (
-                          <pre className="font-mono text-xs text-emerald-600 bg-slate-900 p-3 rounded-lg overflow-x-auto">
+                          <pre className="font-mono text-xs text-emerald-400 bg-black/60 border border-white/[0.06] p-3 rounded-lg overflow-x-auto">
                             {candidateAnswer || '// No answer submitted.'}
                           </pre>
                         ) : (
-                          <p className="text-sm text-slate-700 leading-relaxed font-mono whitespace-pre-line bg-white p-3 rounded-lg border border-slate-100">
+                          <p className="text-sm text-gray-300 leading-relaxed font-mono whitespace-pre-line bg-black/40 p-3 rounded-lg border border-white/[0.06]">
                             {candidateAnswer || 'No answer submitted.'}
                           </p>
                         )}
                       </div>
 
                       {/* AI evaluation result */}
-                      <div className={`p-4 rounded-xl border ${qEval?.passed ? 'bg-emerald-50/20 border-emerald-100 text-slate-800' : 'bg-red-50/10 border-red-100 text-slate-800'}`}>
+                      <div className={`p-4 rounded-xl border ${qEval?.passed ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300' : 'bg-red-500/10 border-red-500/20 text-red-300'}`}>
                         <h5 className="text-xs font-bold uppercase tracking-wider mb-1.5 flex items-center">
                           {qEval?.passed ? (
-                            <span className="text-emerald-700 font-extrabold flex items-center"><CheckCircle2 className="w-4 h-4 mr-1.5" /> AI Feedback (Passed)</span>
+                            <span className="text-emerald-400 font-extrabold flex items-center"><CheckCircle2 className="w-4 h-4 mr-1.5" /> AI Feedback (Passed)</span>
                           ) : (
-                            <span className="text-red-700 font-extrabold flex items-center"><AlertCircle className="w-4 h-4 mr-1.5" /> AI Feedback (Incorrect/Needs Work)</span>
+                            <span className="text-red-400 font-extrabold flex items-center"><AlertCircle className="w-4 h-4 mr-1.5" /> AI Feedback (Incorrect/Needs Work)</span>
                           )}
                         </h5>
-                        <p className="text-sm leading-relaxed">{qEval?.feedback || 'No feedback logged.'}</p>
+                        <p className="text-sm leading-relaxed text-gray-300">{qEval?.feedback || 'No feedback logged.'}</p>
                       </div>
                     </div>
                   );
@@ -847,10 +847,10 @@ export const EvaluationReportModal: React.FC<EvaluationReportModalProps> = ({ re
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-100 flex justify-end bg-slate-50/50">
+        <div className="p-4 border-t border-white/[0.06] flex justify-end bg-[#0d0d0d]">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 bg-primary-dark text-white rounded-xl text-sm font-semibold hover:bg-primary-dark/95"
+            className="px-5 py-2.5 bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white rounded-xl text-sm font-semibold transition-colors"
           >
             Close Report
           </button>

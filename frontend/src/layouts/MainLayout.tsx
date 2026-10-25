@@ -9,48 +9,50 @@ const MainLayout: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/');
   };
 
   const isCandidate = user?.role === 'candidate';
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen bg-[#050505] flex">
       {/* Sidebar Navigation */}
-      <aside className="w-64 bg-primary-dark text-slate-300 flex flex-col fixed inset-y-0 shadow-xl border-r border-accent-teal/10 z-20">
-        <div className="h-16 flex items-center px-6 bg-primary-dark/85 font-black text-white text-xl border-b border-accent-teal/20">
-          <Sparkles className="w-6 h-6 mr-2 text-accent-seafoam" />
-          <span>TalentAI</span>
+      <aside className="w-64 bg-[#0a0a0a] border-r border-white/[0.06] flex flex-col fixed inset-y-0 z-20">
+        <div className="h-16 flex items-center px-6 border-b border-white/[0.06]">
+          <Sparkles className="w-6 h-6 mr-2 text-orange-500" />
+          <span className="text-xl font-black text-white">
+            Talent<span className="bg-gradient-to-r from-orange-500 to-amber-400 bg-clip-text text-transparent">AI</span>
+          </span>
         </div>
         
         <nav className="flex-1 py-6 px-3 space-y-2 overflow-y-auto">
           {/* Main shared dashboard */}
-          <NavItem to="/" icon={<LayoutDashboard className="w-5 h-5" />} label="Dashboard" exact />
+          <NavItem to="/dashboard" icon={<LayoutDashboard className="w-5 h-5" />} label="Dashboard" exact />
           
           {/* Candidate-only links */}
           {isCandidate && (
             <>
-              <NavItem to="/upload" icon={<Upload className="w-5 h-5" />} label="Resume Upload" />
-              <NavItem to="/matches" icon={<Briefcase className="w-5 h-5" />} label="Job Matches" />
-              <NavItem to="/assessment" icon={<ClipboardList className="w-5 h-5" />} label="Assessment" />
+              <NavItem to="/dashboard/upload" icon={<Upload className="w-5 h-5" />} label="Resume Upload" />
+              <NavItem to="/dashboard/matches" icon={<Briefcase className="w-5 h-5" />} label="Job Matches" />
+              <NavItem to="/dashboard/assessment" icon={<ClipboardList className="w-5 h-5" />} label="Assessment" />
             </>
           )}
         </nav>
         
         {/* Sidebar Footer with Logged In User Details and Logout */}
-        <div className="p-4 border-t border-accent-teal/20 bg-primary-dark/95 flex flex-col space-y-3">
+        <div className="p-4 border-t border-white/[0.06] flex flex-col space-y-3">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-accent-teal/20 rounded-lg text-accent-seafoam">
+            <div className="p-2 bg-orange-500/10 rounded-lg text-orange-400">
               <UserIcon className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-white truncate">{user?.name}</p>
-              <p className="text-xxs text-accent-teal truncate capitalize">{user?.role} Portal</p>
+              <p className="text-xs text-orange-400 truncate capitalize">{user?.role} Portal</p>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center px-4 py-2.5 bg-accent-teal/10 hover:bg-red-950/20 text-slate-300 hover:text-red-300 border border-accent-teal/20 rounded-xl text-sm font-medium transition duration-200"
+            className="w-full flex items-center justify-center px-4 py-2.5 bg-white/[0.04] hover:bg-red-500/10 text-gray-400 hover:text-red-400 border border-white/[0.06] rounded-xl text-sm font-medium transition"
           >
             <LogOut className="w-4 h-4 mr-2" />
             Sign Out
@@ -59,16 +61,16 @@ const MainLayout: React.FC = () => {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 ml-64 min-h-screen flex flex-col">
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shadow-sm">
-          <h1 className="text-xl font-bold text-primary-dark">
+      <main className="flex-1 ml-64 min-h-screen flex flex-col bg-[#050505]">
+        <header className="h-16 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/[0.06] flex items-center justify-between px-8 sticky top-0 z-10">
+          <h1 className="text-xl font-bold text-white">
             {isCandidate ? 'Candidate Workspace' : 'Recruiter Workspace'}
           </h1>
-          <div className="text-sm font-medium text-slate-500">
-            Role: <span className="font-bold text-primary-dark capitalize">{user?.role}</span>
+          <div className="text-sm font-medium text-gray-400">
+            Role: <span className="font-bold text-orange-400 capitalize">{user?.role}</span>
           </div>
         </header>
-        <div className="p-8 flex-1 bg-white">
+        <div className="p-8 flex-1 bg-[#050505]">
           <Outlet />
         </div>
       </main>
@@ -88,10 +90,10 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon, label, exact }) => (
     to={to}
     end={exact}
     className={({ isActive }) =>
-      `flex items-center px-4 py-3 rounded-lg transition-all duration-200 ${
+      `flex items-center px-4 py-3 rounded-xl transition ${
         isActive
-          ? 'bg-accent-seafoam text-primary-dark font-bold shadow-md shadow-accent-seafoam/20'
-          : 'hover:bg-slate-800 hover:text-white'
+          ? 'bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold shadow-md shadow-orange-500/20'
+          : 'text-gray-500 hover:text-white hover:bg-white/[0.04]'
       }`
     }
   >

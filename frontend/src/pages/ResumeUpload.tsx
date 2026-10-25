@@ -34,14 +34,13 @@ const ResumeUpload: React.FC = () => {
     }
     setError(null);
     setFile(selectedFile);
-    setParsedData(null); // Reset old data
+    setParsedData(null);
     return true;
   };
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
-    
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       validateFile(e.dataTransfer.files[0]);
     }
@@ -64,7 +63,6 @@ const ResumeUpload: React.FC = () => {
 
   const processResume = async () => {
     if (!file || !token) return;
-    
     setIsProcessing(true);
     setError(null);
 
@@ -74,9 +72,7 @@ const ResumeUpload: React.FC = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/upload-resume`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
+        headers: { 'Authorization': `Bearer ${token}` },
         body: formData,
       });
 
@@ -87,7 +83,7 @@ const ResumeUpload: React.FC = () => {
 
       const result = await response.json();
       setParsedData(result.data);
-      setResumeData(result.data); // persist globally
+      setResumeData(result.data);
     } catch (err: any) {
       setError(err.message || 'An error occurred while connecting to the server.');
     } finally {
@@ -96,86 +92,57 @@ const ResumeUpload: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-12 font-sans text-primary-dark">
+    <div className="max-w-4xl mx-auto space-y-6 pb-12 font-sans">
       <div>
-        <h2 className="text-2xl font-bold text-primary-dark">Upload Resume</h2>
-        <p className="text-slate-500">Upload candidate resumes for AI analysis and parsing.</p>
+        <h2 className="text-2xl font-bold text-white">Upload Resume</h2>
+        <p className="text-gray-500">Upload candidate resumes for AI analysis and parsing.</p>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-accent-teal/20 p-8">
+      <div className="bg-white/[0.03] rounded-2xl border border-white/[0.06] p-8">
         {!file ? (
           <div
             className={`border-2 border-dashed rounded-xl p-12 text-center transition-all duration-200 cursor-pointer ${
               isDragging
-                ? 'border-accent-seafoam bg-accent-mint/30'
-                : 'border-slate-300 hover:border-accent-teal hover:bg-slate-50'
+                ? 'border-orange-500/50 bg-orange-500/5'
+                : 'border-white/10 hover:border-orange-500/30 hover:bg-white/[0.02]'
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
           >
-            <input
-              type="file"
-              className="hidden"
-              ref={fileInputRef}
-              onChange={handleFileInput}
-              accept=".pdf,application/pdf"
-            />
-            
+            <input type="file" className="hidden" ref={fileInputRef} onChange={handleFileInput} accept=".pdf,application/pdf" />
             <div className="flex flex-col items-center justify-center space-y-4">
-              <div className={`p-4 rounded-full ${isDragging ? 'bg-accent-mint text-primary-dark' : 'bg-slate-100 text-slate-500'}`}>
+              <div className={`p-4 rounded-full ${isDragging ? 'bg-orange-500/10 text-orange-400' : 'bg-white/[0.04] text-gray-500'}`}>
                 <UploadCloud className="w-8 h-8" />
               </div>
               <div>
-                <p className="text-lg font-semibold text-primary-dark">
-                  Click or drag and drop to upload
-                </p>
-                <p className="text-sm text-slate-500 mt-1">
-                  PDF format up to 10MB
-                </p>
+                <p className="text-lg font-semibold text-white">Click or drag and drop to upload</p>
+                <p className="text-sm text-gray-500 mt-1">PDF format up to 10MB</p>
               </div>
             </div>
           </div>
         ) : (
-          <div className="border border-accent-teal/30 bg-accent-mint/20 rounded-xl p-6 relative">
-            <button 
-              onClick={removeFile}
-              disabled={isProcessing}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1 bg-white rounded-full shadow-sm disabled:opacity-50"
-            >
+          <div className="bg-orange-500/5 border border-orange-500/20 rounded-xl p-6 relative">
+            <button onClick={removeFile} disabled={isProcessing} className="absolute top-4 right-4 text-gray-500 hover:text-white p-1 bg-white/5 rounded-full disabled:opacity-50 transition">
               <X className="w-5 h-5" />
             </button>
             <div className="flex items-center space-x-4">
-              <div className="p-3 bg-white rounded-lg shadow-sm">
-                <FileIcon className="w-8 h-8 text-primary-dark" />
+              <div className="p-3 bg-[#0a0a0a] rounded-lg">
+                <FileIcon className="w-8 h-8 text-orange-400" />
               </div>
               <div className="flex-1">
-                <h4 className="font-bold text-primary-dark flex items-center">
+                <h4 className="font-bold text-white flex items-center">
                   {file.name}
-                  <CheckCircle2 className="w-4 h-4 ml-2 text-emerald-600" />
+                  <CheckCircle2 className="w-4 h-4 ml-2 text-emerald-400" />
                 </h4>
-                <p className="text-sm text-slate-500">
-                  {(file.size / 1024 / 1024).toFixed(2)} MB
-                </p>
+                <p className="text-sm text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
               </div>
             </div>
-            
             {!parsedData && (
               <div className="mt-6 flex justify-end">
-                <button 
-                  onClick={processResume}
-                  disabled={isProcessing}
-                  className="px-6 py-2 bg-accent-seafoam hover:bg-accent-seafoam/90 text-primary-dark rounded-xl font-bold transition-all shadow-sm flex items-center disabled:opacity-70"
-                >
-                  {isProcessing ? (
-                    <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin text-primary-dark" />
-                      Parsing with AI...
-                    </>
-                  ) : (
-                    'Process Resume'
-                  )}
+                <button onClick={processResume} disabled={isProcessing} className="px-6 py-2 bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white rounded-xl font-bold transition-all shadow-lg shadow-orange-500/20 flex items-center disabled:opacity-70">
+                  {isProcessing ? (<><Loader2 className="w-5 h-5 mr-2 animate-spin" />Parsing with AI...</>) : ('Process Resume')}
                 </button>
               </div>
             )}
@@ -183,100 +150,89 @@ const ResumeUpload: React.FC = () => {
         )}
 
         {error && (
-          <div className="mt-4 p-4 bg-red-50 text-red-700 rounded-lg flex items-center border border-red-100">
+          <div className="mt-4 p-4 bg-red-500/10 text-red-400 rounded-xl flex items-center border border-red-500/20">
             <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
             <p className="text-sm">{error}</p>
           </div>
         )}
       </div>
 
-      {/* Render Parsed JSON Data */}
       {parsedData && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <h3 className="text-xl font-black text-primary-dark">Extraction Results</h3>
-          
+          <h3 className="text-xl font-black text-white">Extraction Results</h3>
           <div className="grid grid-cols-1 gap-6">
-            
             {/* Skills */}
-            <div className="bg-white rounded-xl shadow-sm border border-accent-teal/20 p-6">
-              <h4 className="text-base font-bold text-primary-dark mb-4 flex items-center">
-                <Code className="w-5 h-5 mr-2 text-accent-teal" /> Skills
+            <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] p-6">
+              <h4 className="text-base font-bold text-white mb-4 flex items-center">
+                <Code className="w-5 h-5 mr-2 text-orange-400" /> Skills
               </h4>
               <div className="flex flex-wrap gap-2">
                 {parsedData.skills.length > 0 ? parsedData.skills.map((skill, index) => (
-                  <span key={index} className="px-3 py-1 bg-accent-mint text-primary-dark rounded-full text-xs font-bold border border-accent-seafoam/20">
-                    {skill}
-                  </span>
-                )) : <span className="text-slate-500 text-sm">No skills found.</span>}
+                  <span key={index} className="px-3 py-1 bg-orange-500/10 text-orange-300 rounded-full text-xs font-bold border border-orange-500/20">{skill}</span>
+                )) : <span className="text-gray-500 text-sm">No skills found.</span>}
               </div>
             </div>
 
             {/* Experience */}
-            <div className="bg-white rounded-xl shadow-sm border border-accent-teal/20 p-6">
-              <h4 className="text-base font-bold text-primary-dark mb-4 flex items-center">
-                <Briefcase className="w-5 h-5 mr-2 text-accent-teal" /> Experience
+            <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] p-6">
+              <h4 className="text-base font-bold text-white mb-4 flex items-center">
+                <Briefcase className="w-5 h-5 mr-2 text-orange-400" /> Experience
               </h4>
               <div className="space-y-6">
                 {parsedData.experience.length > 0 ? parsedData.experience.map((exp, index) => (
-                  <div key={index} className="border-l-2 border-accent-mint pl-4">
-                    <h5 className="font-bold text-sm text-primary-dark">{exp.role}</h5>
-                    <div className="flex items-center text-xs text-slate-500 mb-2 mt-0.5">
-                      <span className="font-bold text-slate-700 mr-2">{exp.company}</span>
+                  <div key={index} className="border-l-2 border-orange-500/30 pl-4">
+                    <h5 className="font-bold text-sm text-white">{exp.role}</h5>
+                    <div className="flex items-center text-xs text-gray-500 mb-2 mt-0.5">
+                      <span className="font-bold text-gray-400 mr-2">{exp.company}</span>
                       <span>• {exp.duration}</span>
                     </div>
-                    <ul className="list-disc list-inside text-sm text-slate-600 space-y-1">
-                      {exp.highlights.map((highlight, hIndex) => (
-                        <li key={hIndex}>{highlight}</li>
-                      ))}
+                    <ul className="list-disc list-inside text-sm text-gray-400 space-y-1">
+                      {exp.highlights.map((highlight, hIndex) => (<li key={hIndex}>{highlight}</li>))}
                     </ul>
                   </div>
-                )) : <span className="text-slate-500 text-sm">No experience found.</span>}
+                )) : <span className="text-gray-500 text-sm">No experience found.</span>}
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Education */}
-              <div className="bg-white rounded-xl shadow-sm border border-accent-teal/20 p-6">
-                <h4 className="text-base font-bold text-primary-dark mb-4 flex items-center">
-                  <GraduationCap className="w-5 h-5 mr-2 text-accent-teal" /> Education
+              <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] p-6">
+                <h4 className="text-base font-bold text-white mb-4 flex items-center">
+                  <GraduationCap className="w-5 h-5 mr-2 text-orange-400" /> Education
                 </h4>
                 <div className="space-y-4">
                   {parsedData.education.length > 0 ? parsedData.education.map((edu, index) => (
                     <div key={index}>
-                      <h5 className="font-bold text-sm text-primary-dark">{edu.degree}</h5>
-                      <p className="text-xs text-slate-600 mt-0.5">{edu.institution}</p>
-                      {edu.year && <p className="text-xxs text-slate-400 mt-1">{edu.year}</p>}
+                      <h5 className="font-bold text-sm text-white">{edu.degree}</h5>
+                      <p className="text-xs text-gray-500 mt-0.5">{edu.institution}</p>
+                      {edu.year && <p className="text-xs text-gray-600 mt-1">{edu.year}</p>}
                     </div>
-                  )) : <span className="text-slate-500 text-sm">No education found.</span>}
+                  )) : <span className="text-gray-500 text-sm">No education found.</span>}
                 </div>
               </div>
 
               {/* Projects */}
-              <div className="bg-white rounded-xl shadow-sm border border-accent-teal/20 p-6">
-                <h4 className="text-base font-bold text-primary-dark mb-4 flex items-center">
-                  <Code className="w-5 h-5 mr-2 text-accent-teal" /> Projects
+              <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] p-6">
+                <h4 className="text-base font-bold text-white mb-4 flex items-center">
+                  <Code className="w-5 h-5 mr-2 text-orange-400" /> Projects
                 </h4>
                 <div className="space-y-4">
                   {parsedData.projects.length > 0 ? parsedData.projects.map((proj, index) => (
                     <div key={index}>
-                      <h5 className="font-bold text-sm text-primary-dark">{proj.title}</h5>
-                      <p className="text-xs text-slate-600 mt-1 leading-relaxed">{proj.description}</p>
+                      <h5 className="font-bold text-sm text-white">{proj.title}</h5>
+                      <p className="text-xs text-gray-500 mt-1 leading-relaxed">{proj.description}</p>
                     </div>
-                  )) : <span className="text-slate-500 text-sm">No projects found.</span>}
+                  )) : <span className="text-gray-500 text-sm">No projects found.</span>}
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-end pt-4 border-t border-slate-200 mt-6">
-              <button
-                onClick={() => navigate('/matches', { state: { resumeData: parsedData } })}
-                className="px-6 py-3 bg-accent-seafoam text-primary-dark rounded-xl font-bold hover:bg-accent-seafoam/90 transition-all shadow-md flex items-center"
-              >
+            <div className="flex justify-end pt-4 border-t border-white/[0.06] mt-6">
+              <button onClick={() => navigate('/dashboard/matches', { state: { resumeData: parsedData } })} className="px-6 py-3 bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white rounded-xl font-bold transition-all shadow-lg shadow-orange-500/20 flex items-center">
                 Find Job Matches
-                <ArrowRight className="w-5 h-5 ml-2 text-primary-dark" />
+                <ArrowRight className="w-5 h-5 ml-2" />
               </button>
             </div>
-
           </div>
         </div>
       )}

@@ -53,9 +53,9 @@ interface EvaluationReport {
 }
 
 const DIFFICULTY_COLORS: Record<string, string> = {
-  easy: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  medium: 'bg-amber-50 text-amber-700 border-amber-200',
-  hard: 'bg-red-50 text-red-700 border-red-200',
+  easy: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  medium: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  hard: 'bg-red-500/10 text-red-400 border-red-500/20',
 };
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
@@ -85,45 +85,45 @@ const SetupForm: React.FC<SetupFormProps> = ({ resumeData, onGenerate, isLoading
   ];
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 pb-12 font-sans text-primary-dark">
+    <div className="max-w-3xl mx-auto space-y-6 pb-12 font-sans">
       <div>
-        <h2 className="text-2xl font-bold text-primary-dark">Skill Assessments</h2>
-        <p className="text-slate-500">Generate an AI-powered adaptive test tailored to your resume and job role.</p>
+        <h2 className="text-2xl font-bold text-white">Skill Assessments</h2>
+        <p className="text-gray-500">Generate an AI-powered adaptive test tailored to your resume and job role.</p>
       </div>
 
       {!resumeData && (
-        <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
+        <div className="p-4 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-xl flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
           <div>
-            <p className="text-sm font-semibold text-amber-800">No resume data found</p>
-            <p className="text-sm text-amber-700 mt-0.5">Please upload and parse a resume first for the most accurate assessment.</p>
-            <button onClick={() => navigate('/upload')} className="mt-2 text-sm text-amber-800 font-bold underline">
+            <p className="text-sm font-semibold text-amber-300">No resume data found</p>
+            <p className="text-sm text-amber-400/90 mt-0.5">Please upload and parse a resume first for the most accurate assessment.</p>
+            <button onClick={() => navigate('/dashboard/upload')} className="mt-2 text-sm text-orange-400 font-bold underline">
               Go to Upload →
             </button>
           </div>
         </div>
       )}
 
-      <div className="bg-white rounded-2xl shadow-sm border border-accent-teal/20 p-8 space-y-6">
+      <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-8 space-y-6">
         <div>
-          <label className="block text-sm font-semibold text-primary-dark mb-2">Job Description</label>
+          <label className="block text-sm font-semibold text-gray-400 mb-2">Job Description</label>
           <textarea
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
             rows={6}
             placeholder="Paste the job description here... e.g., 'Senior React Developer with 4+ years experience in TypeScript, GraphQL, and AWS...'"
-            className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-primary-dark placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-accent-seafoam focus:border-transparent resize-none transition"
+            className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 text-white placeholder-gray-600 rounded-xl focus:border-orange-500 focus:ring-1 focus:ring-orange-500/30 resize-none transition focus:outline-none text-sm"
           />
         </div>
 
         <div>
-          <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Quick Fill</p>
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Quick Fill</p>
           <div className="flex flex-wrap gap-2">
             {quickFills.map((qf) => (
               <button
                 key={qf.label}
                 onClick={() => setJobDescription(qf.value)}
-                className="px-3 py-1.5 text-xs bg-slate-100 hover:bg-slate-200 text-primary-dark rounded-lg transition font-semibold border border-slate-200"
+                className="px-3 py-1.5 text-xs bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 rounded-lg border border-white/[0.06] font-semibold transition"
               >
                 {qf.label}
               </button>
@@ -132,7 +132,7 @@ const SetupForm: React.FC<SetupFormProps> = ({ resumeData, onGenerate, isLoading
         </div>
 
         {error && (
-          <div className="p-4 bg-red-50 text-red-700 rounded-xl flex items-center border border-red-100">
+          <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl flex items-center">
             <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
             <p className="text-sm">{error}</p>
           </div>
@@ -141,16 +141,16 @@ const SetupForm: React.FC<SetupFormProps> = ({ resumeData, onGenerate, isLoading
         <button
           onClick={() => onGenerate(jobDescription)}
           disabled={isLoading || !jobDescription.trim()}
-          className="w-full py-3 bg-accent-seafoam hover:bg-accent-seafoam/90 text-primary-dark rounded-xl font-bold transition-all shadow-md flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full py-3 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold rounded-xl shadow-lg shadow-orange-500/20 hover:from-orange-500 hover:to-amber-400 disabled:opacity-50 transition-all flex items-center justify-center disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <>
-              <Loader2 className="w-5 h-5 mr-2 animate-spin text-primary-dark" />
+              <Loader2 className="w-5 h-5 mr-2 animate-spin text-white" />
               Generating Adaptive Test with AI...
             </>
           ) : (
             <>
-              <Sparkles className="w-5 h-5 mr-2 text-primary-dark" />
+              <Sparkles className="w-5 h-5 mr-2 text-white" />
               Generate My Assessment
             </>
           )}
@@ -229,10 +229,10 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ test, jobId, jobRole, job
 
   if (isSubmitting) {
     return (
-      <div className="max-w-md mx-auto text-center space-y-4 py-16 font-sans text-primary-dark">
-        <Loader2 className="w-12 h-12 text-accent-seafoam animate-spin mx-auto" />
-        <h3 className="text-xl font-bold">Grading Assessment with AI...</h3>
-        <p className="text-sm text-slate-500">
+      <div className="max-w-md mx-auto text-center space-y-4 py-16 font-sans">
+        <Loader2 className="w-12 h-12 text-orange-500 animate-spin mx-auto" />
+        <h3 className="text-xl font-bold text-white">Grading Assessment with AI...</h3>
+        <p className="text-sm text-gray-500">
           Gemini is analyzing your code syntax, checking compiler results, and grading your scenario answers.
         </p>
       </div>
@@ -244,67 +244,67 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ test, jobId, jobRole, job
     const max = evaluation.maxScore;
     const pct = Math.round((earned / max) * 100);
     const grade = pct >= 80 ? 'Excellent' : pct >= 60 ? 'Good' : pct >= 40 ? 'Average' : 'Needs Improvement';
-    const gradeColor = pct >= 80 ? 'text-emerald-600' : pct >= 60 ? 'text-blue-600' : pct >= 40 ? 'text-amber-600' : 'text-red-600';
+    const gradeColor = pct >= 80 ? 'text-emerald-400' : pct >= 60 ? 'text-blue-400' : pct >= 40 ? 'text-amber-400' : 'text-red-400';
 
     return (
-      <div className="max-w-4xl mx-auto space-y-6 py-6 font-sans text-primary-dark">
-        <div className="bg-white rounded-2xl shadow-sm border border-accent-teal/20 p-8 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent-mint/30 mb-4">
-            <Trophy className="w-8 h-8 text-primary-dark" />
+      <div className="max-w-4xl mx-auto space-y-6 py-6 font-sans">
+        <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-8 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-orange-500/10 mb-4">
+            <Trophy className="w-8 h-8 text-orange-400" />
           </div>
-          <h2 className="text-2xl font-black text-primary-dark mb-1">Assessment Evaluation</h2>
-          <p className="text-slate-500 mb-8">{test.testTitle}</p>
+          <h2 className="text-2xl font-black text-white mb-1">Assessment Evaluation</h2>
+          <p className="text-gray-400 mb-8">{test.testTitle}</p>
 
           <div className={`text-6xl font-black mb-2 ${gradeColor}`}>{pct}%</div>
           <div className={`text-xl font-bold mb-2 ${gradeColor}`}>{grade}</div>
-          <p className="text-slate-500 text-sm mb-6">{earned} / {max} marks</p>
+          <p className="text-gray-400 text-sm mb-6">{earned} / {max} marks</p>
 
           {/* Strengths and Weaknesses grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left mb-8">
-            <div className="p-5 bg-emerald-50/30 border border-emerald-100 rounded-xl">
-              <h4 className="font-bold text-emerald-800 text-sm mb-3 flex items-center">
+            <div className="p-5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+              <h4 className="font-bold text-emerald-400 text-sm mb-3 flex items-center">
                 <CheckCircle2 className="w-4 h-4 mr-1.5" /> Strengths
               </h4>
-              <ul className="list-disc list-inside text-xs text-slate-700 space-y-1.5">
+              <ul className="list-disc list-inside text-xs text-gray-300 space-y-1.5">
                 {evaluation.strengths.map((s, i) => <li key={i}>{s}</li>)}
               </ul>
             </div>
-            <div className="p-5 bg-red-50/20 border border-red-100 rounded-xl">
-              <h4 className="font-bold text-red-800 text-sm mb-3 flex items-center">
+            <div className="p-5 bg-red-500/10 border border-red-500/20 rounded-xl">
+              <h4 className="font-bold text-red-400 text-sm mb-3 flex items-center">
                 <AlertCircle className="w-4 h-4 mr-1.5" /> Areas for Growth
               </h4>
-              <ul className="list-disc list-inside text-xs text-slate-700 space-y-1.5">
+              <ul className="list-disc list-inside text-xs text-gray-300 space-y-1.5">
                 {evaluation.weaknesses.map((w, i) => <li key={i}>{w}</li>)}
               </ul>
             </div>
           </div>
 
           {/* Recommendations */}
-          <div className="p-5 bg-slate-50 border border-slate-200 rounded-xl text-left mb-8">
-            <h4 className="font-bold text-primary-dark text-sm mb-3">Actionable Recommendations</h4>
-            <ul className="list-disc list-inside text-xs text-slate-600 space-y-1.5">
+          <div className="p-5 bg-white/[0.02] border border-white/[0.06] rounded-xl text-left mb-8">
+            <h4 className="font-bold text-white text-sm mb-3">Actionable Recommendations</h4>
+            <ul className="list-disc list-inside text-xs text-gray-300 space-y-1.5">
               {evaluation.recommendations.map((r, i) => <li key={i}>{r}</li>)}
             </ul>
           </div>
 
           {/* Details list */}
-          <div className="text-left border-t border-slate-100 pt-8 mb-8">
-            <h4 className="font-bold text-base text-primary-dark mb-4">Question Breakdown</h4>
+          <div className="text-left border-t border-white/[0.06] pt-8 mb-8">
+            <h4 className="font-bold text-base text-white mb-4">Question Breakdown</h4>
             <div className="space-y-4">
               {test.questions.map((q, idx) => {
                 const qEval = evaluation.questionEvaluations.find(e => e.id === q.id);
                 return (
-                  <div key={q.id} className="p-4 rounded-xl border border-slate-100 bg-slate-5/40">
+                  <div key={q.id} className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]">
                     <div className="flex justify-between items-start">
                       <div>
-                        <span className="text-xxs font-bold text-slate-400 uppercase tracking-wide">Q{idx + 1} • {q.type}</span>
-                        <h5 className="font-bold text-sm text-primary-dark mt-0.5">{q.question}</h5>
+                        <span className="text-xxs font-bold text-gray-500 uppercase tracking-wide">Q{idx + 1} • {q.type}</span>
+                        <h5 className="font-bold text-sm text-white mt-0.5">{q.question}</h5>
                       </div>
-                      <span className={`text-xs px-2.5 py-0.5 rounded font-bold ${qEval?.passed ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
+                      <span className={`text-xs px-2.5 py-0.5 rounded font-bold border ${qEval?.passed ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
                         {qEval?.score} pts
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500 mt-2 italic bg-white p-2.5 rounded border border-slate-100 leading-relaxed">
+                    <p className="text-xs text-gray-400 mt-2 italic bg-[#0a0a0a] p-2.5 rounded border border-white/[0.06] leading-relaxed">
                       AI Feedback: {qEval?.feedback}
                     </p>
                   </div>
@@ -315,14 +315,14 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ test, jobId, jobRole, job
 
           <div className="flex justify-center space-x-4">
             <button
-              onClick={() => navigate('/')}
-              className="px-6 py-2.5 bg-primary-dark text-white rounded-xl text-sm font-semibold hover:bg-primary-dark/90 transition-all shadow-sm"
+              onClick={() => navigate('/dashboard')}
+              className="px-6 py-2.5 bg-white/5 text-gray-300 hover:bg-white/10 rounded-xl text-sm font-semibold transition-all border border-white/10"
             >
               Back to Dashboard
             </button>
             <button
               onClick={onReset}
-              className="flex items-center px-6 py-2.5 bg-accent-seafoam text-primary-dark rounded-xl text-sm font-bold hover:bg-accent-seafoam/90 transition-all shadow-sm"
+              className="flex items-center px-6 py-2.5 bg-gradient-to-r from-orange-600 to-amber-500 text-white rounded-xl text-sm font-bold shadow-sm hover:from-orange-500 hover:to-amber-400 transition-all"
             >
               <RotateCcw className="w-4 h-4 mr-2" /> Take Another Test
             </button>
@@ -341,45 +341,45 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ test, jobId, jobRole, job
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 pb-12 font-sans text-primary-dark">
+    <div className="max-w-3xl mx-auto space-y-6 pb-12 font-sans">
       {submitError && (
-        <div className="p-4 bg-red-50 text-red-700 rounded-xl flex items-center border border-red-100">
+        <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl flex items-center">
           <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
           <p className="text-sm">{submitError}</p>
         </div>
       )}
 
       {/* Header */}
-      <div className="bg-white rounded-2xl shadow-sm border border-accent-teal/20 p-6">
+      <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
         <div className="flex items-center justify-between mb-1">
-          <h2 className="text-lg font-bold text-primary-dark truncate">{test.testTitle}</h2>
-          <span className={`text-sm flex-shrink-0 ml-4 font-mono font-bold ${timeRemaining !== null && timeRemaining < 300 ? 'text-red-500 animate-pulse' : 'text-slate-600'}`}>
-            <Clock className="w-4 h-4 inline-block mr-1 text-primary-dark" />
+          <h2 className="text-lg font-bold text-white truncate">{test.testTitle}</h2>
+          <span className={`text-sm flex-shrink-0 ml-4 font-mono font-bold ${timeRemaining !== null && timeRemaining < 300 ? 'text-red-400 animate-pulse' : 'text-gray-400'}`}>
+            <Clock className="w-4 h-4 inline-block mr-1 text-gray-400" />
             {formatTime(timeRemaining)}
           </span>
         </div>
-        <p className="text-sm text-slate-500 mb-4">{test.jobRole} · {test.totalMarks} marks total</p>
+        <p className="text-sm text-gray-400 mb-4">{test.jobRole} · {test.totalMarks} marks total</p>
         <div className="flex items-center gap-3">
-          <div className="flex-1 bg-slate-100 rounded-full h-2">
+          <div className="flex-1 bg-white/10 rounded-full h-2">
             <div
-              className="bg-accent-seafoam h-2 rounded-full transition-all duration-300"
+              className="bg-gradient-to-r from-orange-500 to-amber-400 h-2 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <span className="text-sm text-slate-500 font-bold flex-shrink-0">{currentIndex + 1}/{total}</span>
+          <span className="text-sm text-gray-400 font-bold flex-shrink-0">{currentIndex + 1}/{total}</span>
         </div>
       </div>
 
       {/* Question Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-accent-teal/20 p-8">
+      <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-8">
         <div className="flex items-center gap-3 mb-6">
-          <span className="flex items-center gap-1.5 px-3 py-1.5 bg-accent-mint text-primary-dark rounded-lg text-xs font-bold border border-accent-teal/15 uppercase tracking-wider">
+          <span className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-500/10 text-orange-400 border border-orange-500/20 rounded-lg uppercase tracking-wider text-xs font-bold">
             {TYPE_ICONS[question.type]} {question.type === 'mcq' ? 'Multiple Choice' : question.type === 'coding' ? 'Coding' : 'Scenario'}
           </span>
           <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold border capitalize ${DIFFICULTY_COLORS[question.difficulty]}`}>
             {question.difficulty}
           </span>
-          <span className="text-xs text-slate-400 ml-auto font-medium">{question.topic}</span>
+          <span className="text-xs text-gray-500 ml-auto font-medium">{question.topic}</span>
         </div>
 
         {question.type === 'mcq' && <MCQCard q={question} answer={answers[question.id]} setAnswer={setAnswer} />}
@@ -392,7 +392,7 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ test, jobId, jobRole, job
         <button
           onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
           disabled={currentIndex === 0}
-          className="flex items-center px-4 py-2 text-primary-dark border border-slate-200 rounded-xl hover:bg-slate-50 transition disabled:opacity-40 font-bold"
+          className="flex items-center px-4 py-2 border border-white/10 text-gray-300 hover:bg-white/5 rounded-xl font-bold transition disabled:opacity-40"
         >
           <ChevronLeft className="w-4 h-4 mr-1" /> Previous
         </button>
@@ -400,14 +400,14 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ test, jobId, jobRole, job
         {currentIndex < total - 1 ? (
           <button
             onClick={() => setCurrentIndex((i) => i + 1)}
-            className="flex items-center px-6 py-2 bg-primary-dark text-white rounded-xl hover:bg-primary-dark/90 transition font-bold shadow-sm"
+            className="flex items-center px-6 py-2 bg-gradient-to-r from-orange-600 to-amber-500 text-white rounded-xl font-bold shadow-sm hover:from-orange-500 hover:to-amber-400 transition"
           >
             Next <ChevronRight className="w-4 h-4 ml-1" />
           </button>
         ) : (
           <button
             onClick={handleSubmitTest}
-            className="flex items-center px-6 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition font-bold shadow-sm animate-pulse"
+            className="flex items-center px-6 py-2 bg-emerald-600 text-white rounded-xl font-bold shadow-sm animate-pulse hover:bg-emerald-500 transition"
           >
             Submit Test <CheckCircle2 className="w-4 h-4 ml-2" />
           </button>
@@ -422,10 +422,10 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ test, jobId, jobRole, job
             onClick={() => setCurrentIndex(i)}
             className={`w-8 h-8 rounded-lg text-xs font-black transition-all ${
               i === currentIndex
-                ? 'bg-accent-seafoam text-primary-dark shadow-md scale-110 border border-accent-seafoam'
+                ? 'bg-gradient-to-r from-orange-600 to-amber-500 text-white shadow-md scale-110'
                 : answers[q.id]
-                ? 'bg-accent-mint text-primary-dark border border-accent-teal/30'
-                : 'bg-slate-100 text-slate-500 border border-slate-200 hover:bg-slate-200'
+                ? 'bg-orange-500/15 text-orange-400 border border-orange-500/30'
+                : 'bg-white/[0.04] text-gray-500 border border-white/10 hover:bg-white/[0.06]'
             }`}
           >
             {i + 1}
@@ -440,7 +440,7 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ test, jobId, jobRole, job
 
 const MCQCard: React.FC<{ q: Question; answer?: string; setAnswer: (id: string, v: string) => void }> = ({ q, answer, setAnswer }) => (
   <div>
-    <p className="text-primary-dark font-semibold text-lg mb-6 leading-relaxed">{q.question}</p>
+    <p className="text-white font-semibold text-lg mb-6 leading-relaxed">{q.question}</p>
     <div className="space-y-3">
       {(q.options ?? []).map((opt, i) => (
         <button
@@ -448,12 +448,12 @@ const MCQCard: React.FC<{ q: Question; answer?: string; setAnswer: (id: string, 
           onClick={() => setAnswer(q.id, opt)}
           className={`w-full text-left px-5 py-4 rounded-xl border-2 transition-all font-semibold text-sm ${
             answer === opt
-              ? 'border-accent-seafoam bg-accent-mint text-primary-dark'
-              : 'border-slate-200 hover:border-accent-teal/40 hover:bg-slate-50 text-slate-700'
+              ? 'border-orange-500 bg-orange-500/10 text-white'
+              : 'border-white/10 hover:border-orange-500/30 hover:bg-white/[0.03] text-gray-300'
           }`}
         >
           <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold mr-3 ${
-            answer === opt ? 'bg-primary-dark text-white' : 'bg-slate-200 text-slate-600'
+            answer === opt ? 'bg-gradient-to-r from-orange-600 to-amber-500 text-white' : 'bg-white/10 text-gray-400'
           }`}>
             {String.fromCharCode(65 + i)}
           </span>
@@ -549,7 +549,7 @@ const EnhancedCodingCard: React.FC<{ q: Question; answer?: string; setAnswer: (i
         </div>
         <div className="flex gap-2">
           <button onClick={() => handleRun(false)} disabled={isEvaluating} className="flex items-center px-4 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-lg transition disabled:opacity-50">
-            {isEvaluating ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Play className="w-4 h-4 mr-1.5 text-accent-seafoam" />}
+            {isEvaluating ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Play className="w-4 h-4 mr-1.5 text-orange-400" />}
             Run Code
           </button>
           {isFullscreen && (
@@ -589,7 +589,7 @@ const EnhancedCodingCard: React.FC<{ q: Question; answer?: string; setAnswer: (i
             <div className="prose prose-invert max-w-none mb-6">
               <p className="text-slate-300 leading-relaxed text-sm whitespace-pre-line">{q.question}</p>
               {q.expectedOutput && (
-                <div className="mt-4 p-4 bg-slate-850 border border-slate-700/60 rounded-lg text-xs">
+                <div className="mt-4 p-4 bg-slate-800/60 border border-slate-700/60 rounded-lg text-xs">
                   <span className="font-semibold text-slate-400">Expected criteria:</span> <span className="text-slate-300">{q.expectedOutput}</span>
                 </div>
               )}
@@ -605,26 +605,26 @@ const EnhancedCodingCard: React.FC<{ q: Question; answer?: string; setAnswer: (i
 
   return (
     <div>
-      <p className="text-primary-dark font-semibold text-lg mb-4 leading-relaxed">{q.question}</p>
+      <p className="text-white font-semibold text-lg mb-4 leading-relaxed">{q.question}</p>
       {editorContent}
-      {evalError && <p className="text-red-500 text-sm mt-2">{evalError}</p>}
+      {evalError && <p className="text-red-400 text-sm mt-2">{evalError}</p>}
     </div>
   );
 };
 
 const ScenarioCard: React.FC<{ q: Question; answer?: string; setAnswer: (id: string, v: string) => void }> = ({ q, answer, setAnswer }) => (
   <div>
-    <div className="mb-5 p-4 bg-accent-mint/30 border border-accent-teal/20 rounded-xl">
-      <p className="text-xs font-bold text-primary-dark/80 uppercase tracking-wider mb-1">Scenario Context</p>
-      <p className="text-xs text-slate-600 leading-relaxed">{q.context ?? 'Consider a real-world professional scenario.'}</p>
+    <div className="mb-5 p-4 bg-orange-500/5 border border-orange-500/20 rounded-xl">
+      <p className="text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">Scenario Context</p>
+      <p className="text-xs text-gray-400 leading-relaxed">{q.context ?? 'Consider a real-world professional scenario.'}</p>
     </div>
-    <p className="text-primary-dark font-semibold text-lg mb-4 leading-relaxed">{q.question}</p>
+    <p className="text-white font-semibold text-lg mb-4 leading-relaxed">{q.question}</p>
     <textarea
       value={answer || ''}
       onChange={(e) => setAnswer(q.id, e.target.value)}
       rows={7}
       placeholder="Write your detailed architectural or professional response here..."
-      className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-primary-dark placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-accent-seafoam focus:border-transparent resize-none transition"
+      className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 text-white placeholder-gray-600 rounded-xl focus:border-orange-500 focus:ring-1 focus:ring-orange-500/30 resize-none transition focus:outline-none text-sm"
     />
   </div>
 );

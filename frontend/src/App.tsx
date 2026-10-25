@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom
 import { ResumeProvider } from './context/ResumeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import MainLayout from './layouts/MainLayout';
+import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
 import ResumeUpload from './pages/ResumeUpload';
 import JobMatches from './pages/JobMatches';
@@ -17,19 +18,28 @@ const ProtectedRoute = () => {
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
+// Redirect authenticated users away from landing page to dashboard
+const PublicLandingRoute = () => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : <LandingPage />;
+};
+
 function App() {
   return (
     <AuthProvider>
       <ResumeProvider>
         <BrowserRouter>
           <Routes>
-            {/* Public Routes */}
+            {/* Public Landing Page */}
+            <Route path="/" element={<PublicLandingRoute />} />
+            
+            {/* Public Auth Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             
             {/* Protected Workspace Layout */}
             <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<MainLayout />}>
+              <Route path="/dashboard" element={<MainLayout />}>
                 <Route index element={<Dashboard />} />
                 <Route path="upload" element={<ResumeUpload />} />
                 <Route path="matches" element={<JobMatches />} />
