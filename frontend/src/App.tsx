@@ -20,8 +20,7 @@ const ProtectedRoute = () => {
 
 // Redirect authenticated users away from landing page to dashboard
 const PublicLandingRoute = () => {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? <Navigate to="/dashboard" replace /> : <LandingPage />;
+  return <LandingPage />;
 };
 
 function App() {
